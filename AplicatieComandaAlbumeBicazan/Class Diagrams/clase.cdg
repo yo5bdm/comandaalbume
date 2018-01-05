@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="clase">
+  <ClassDiagramComponents>
+    <Class name="User" package="" visibility="public" xPosition="73.0" yPosition="89.0">
+      <Fields>
+        <Field name="id" type="int" visibility="private"/>
+        <Field name="email" type="String" visibility="private"/>
+        <Field name="password" type="String" visibility="private"/>
+        <Field name="nume" type="String" visibility="private"/>
+        <Field name="adresa" type="String" visibility="private"/>
+        <Field name="localiatea" type="String" visibility="private"/>
+        <Field name="telefon" type="String" visibility="private"/>
+        <Field name="firma" type="Boolean" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="Produs" package="" visibility="public" xPosition="73.0" yPosition="393.0">
+      <Fields>
+        <Field name="id" type="int" visibility="private"/>
+        <Field name="denumire" type="String" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="Comanda" package="" visibility="public" xPosition="347.0" yPosition="231.0">
+      <Fields>
+        <Field name="userId" type="int" visibility="private"/>
+        <Field name="nrComanda" type="int" visibility="private"/>
+        <Field name="data" type="Date" visibility="private"/>
+        <Field name="status" type="int" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="ProduseComandate" package="" visibility="public" xPosition="615.0" yPosition="241.0">
+      <Fields>
+        <Field name="comandaId" type="int" visibility="private"/>
+        <Field name="produsId" type="int" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="CaracteristiciProdus" package="" visibility="public" xPosition="347.0" yPosition="439.0">
+      <Fields>
+        <Field name="produsId" type="int" visibility="private"/>
+        <Field name="denumire" type="String" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="DateFacturare" package="" visibility="public" xPosition="347.0" yPosition="5.0">
+      <Fields>
+        <Field name="firma" type="String" visibility="private"/>
+        <Field name="codFiscal" type="String" visibility="private"/>
+        <Field name="nrRegCom" type="String" visibility="private"/>
+        <Field name="localitate" type="String" visibility="private"/>
+        <Field name="contBancar" type="String" visibility="private"/>
+        <Field name="banca" type="String" visibility="private"/>
+        <Field name="userId" type="int" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="Variante" package="" visibility="public" xPosition="615.0" yPosition="429.0">
+      <Fields>
+        <Field name="caracteristicaId" type="int" visibility="private"/>
+        <Field name="varianta" type="String" visibility="private"/>
+        <Field name="pretUnitar" type="int" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+    <Class name="DetaliiProdusComandat" package="" visibility="public" xPosition="881.0" yPosition="212.0">
+      <Fields>
+        <Field name="produsComandatId" type="int" visibility="private"/>
+        <Field name="caracteristica" type="String" visibility="private"/>
+        <Field name="varianta" type="String" visibility="private"/>
+        <Field name="bucati" type="int" visibility="private"/>
+        <Field name="pret" type="int" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods/>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <HasRelation name="comandaId" source="Comanda" target="ProduseComandate" type="Composition" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
+    <HasRelation name="produsId" source="Produs" target="ProduseComandate" type="Composition" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
+    <HasRelation name="produsComandatId" source="ProduseComandate" target="DetaliiProdusComandat" type="Composition" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
+    <HasRelation name="caracteristicaId" source="CaracteristiciProdus" target="Variante" type="Composition" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
+    <HasRelation name="produsId" source="Produs" target="CaracteristiciProdus" type="Composition" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
+    <HasRelation name="userId" source="User" target="Comanda" type="Composition" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
+    <HasRelation name="userId" source="User" target="DateFacturare" type="Composition" sourceCardinality="0..1" targetCardinality="1..*" collectionType="ArrayList"/>
+  </ClassDiagramRelations>
+</ClassDiagram>
