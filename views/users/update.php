@@ -16,8 +16,11 @@ $this->params['breadcrumbs'][] = ['label' => $model->username, 'url' => ['update
     
     <?php $form = ActiveForm::begin(); ?>
 <div class="users-form col-lg-4">
-    <?php if(Yii::$app->user->identity->userType === 0) { echo $form->field($model, 'userType')->textInput(); } ?>
-
+    <?php if(Yii::$app->user->identity->userType === 0) { echo $form->field($model, 'userType')->dropDownList([
+        0 => 'Admin',
+        1 => 'Lucrator',
+        2 => 'Client'
+    ]); } ?>
     <?= $form->field($model, 'username')->textInput(['maxlength' => true,'disabled' => 'disabled']) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
@@ -52,6 +55,10 @@ $this->params['breadcrumbs'][] = ['label' => $model->username, 'url' => ['update
     <p>[de implementat]</p>
     <h2>Adrese de livrare</h2>
     <p>[de implementat]</p>
+    <?php if (Yii::$app->user->identity->userType === 0):?>
+    <h2>Administrare utilizatori</h2>
+    <?= Html::a('Lista de utilizatori', ['/users/index'], ['class'=>'btn btn-primary']) ?>
+    <?php endif ?>
 </div>
 
 
