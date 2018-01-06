@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Orders;
-use app\models\OrdersSearch;
+use app\models\Statuses;
+use app\models\StatusesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * OrdersController implements the CRUD actions for Orders model.
+ * StatusesController implements the CRUD actions for Statuses model.
  */
-class OrdersController extends Controller
+class StatusesController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class OrdersController extends Controller
     }
 
     /**
-     * Lists all Orders models.
+     * Lists all Statuses models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new OrdersSearch();
+        $searchModel = new StatusesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class OrdersController extends Controller
     }
 
     /**
-     * Displays a single Orders model.
+     * Displays a single Statuses model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -58,34 +58,25 @@ class OrdersController extends Controller
     }
 
     /**
-     * Creates a new Orders model.
+     * Creates a new Statuses model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Orders();
-        $status = new \app\models\Statuses();
+        $model = new Statuses();
 
-        if (Yii::$app->request->isPost) {
-            $model->clientID = Yii::$app->user->identity->id;
-            $model->workerID = NULL;
-            $model->dataPlasat = date('Y-m-d');
-            $model->status = $status->getDefault();
-            $model->pretTotal = 0.0;
-            if($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                Yii::$app->session->setFlash('error', 'Eroare de sistem, nu s-a putut salva comanda. Te rugam sa incerci mai tarziu');
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
+
         return $this->render('create', [
             'model' => $model,
         ]);
     }
 
     /**
-     * Updates an existing Orders model.
+     * Updates an existing Statuses model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -105,7 +96,7 @@ class OrdersController extends Controller
     }
 
     /**
-     * Deletes an existing Orders model.
+     * Deletes an existing Statuses model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -119,15 +110,15 @@ class OrdersController extends Controller
     }
 
     /**
-     * Finds the Orders model based on its primary key value.
+     * Finds the Statuses model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Orders the loaded model
+     * @return Statuses the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Orders::findOne($id)) !== null) {
+        if (($model = Statuses::findOne($id)) !== null) {
             return $model;
         }
 

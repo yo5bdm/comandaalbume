@@ -35,30 +35,32 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
+    if(Yii::$app->user->isGuest) {
+        $menuItems=[
             ['label' => 'Acasa', 'url' => ['/site/index']],
             ['label' => 'Despre', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                    ['label' => 'Inregistrare', 'url' => ['/site/inregistrare']]
-            ):(
-                    ['label' => 'Contul meu', 'url' => ['/users/update/'.Yii::$app->user->identity->id]]
-            ),
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
+            ['label' => 'Inregistrare', 'url' => ['/site/inregistrare']],
+            ['label' => 'Login', 'url' => ['/site/login']],
+        ];
+    } else {
+        $menuItems=[
+            ['label' => 'Comenzi', 'url' => ['/orders/index']],
+            ['label' => 'Contul meu', 'url' => ['/users/update/'.Yii::$app->user->identity->id]],
+            '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
                     'Logout (' . Yii::$app->user->identity->username . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
-                . '</li>'
-            )
-        ],
+                . '</li>',
+        ];
+    }
+    
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav navbar-right'],
+        'items' => $menuItems,
     ]);
     NavBar::end();
     ?>

@@ -5,6 +5,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'language' =>'ro-RO',
     'name' =>'Comenzi Carpatic Studio',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],

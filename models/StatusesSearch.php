@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Orders;
+use app\models\Statuses;
 
 /**
- * OrdersSearch represents the model behind the search form of `app\models\Orders`.
+ * StatusesSearch represents the model behind the search form of `app\models\Statuses`.
  */
-class OrdersSearch extends Orders
+class StatusesSearch extends Statuses
 {
     /**
      * @inheritdoc
@@ -18,9 +18,8 @@ class OrdersSearch extends Orders
     public function rules()
     {
         return [
-            [['id', 'clientID', 'workerID', 'status'], 'integer'],
-            [['dataPlasat'], 'safe'],
-            [['pretTotal'], 'number'],
+            [['id', 'def'], 'integer'],
+            [['denumire'], 'safe'],
         ];
     }
 
@@ -42,13 +41,7 @@ class OrdersSearch extends Orders
      */
     public function search($params)
     {
-        if(Yii::$app->user->identity->userType == 0) { //admin vede tot
-            $query = Orders::find();
-        } elseif(Yii::$app->user->identity->userType == 1) { //worker vede doar ale lui sau null
-            $query = Orders::find()->where(['workerID'=>Yii::$app->user->identity->id])->orWhere(['workerID'=>null]);
-        } else { //clientul le vede doar ale lui
-            $query = Orders::find()->where(['clientID'=>Yii::$app->user->identity->id]);
-        }
+        $query = Statuses::find();
 
         // add conditions that should always apply here
 
@@ -67,12 +60,10 @@ class OrdersSearch extends Orders
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'clientID' => $this->clientID,
-            'workerID' => $this->workerID,
-            'status' => $this->status,
-            'dataPlasat' => $this->dataPlasat,
-            'pretTotal' => $this->pretTotal,
+            'def' => $this->def,
         ]);
+
+        $query->andFilterWhere(['like', 'denumire', $this->denumire]);
 
         return $dataProvider;
     }

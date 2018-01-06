@@ -16,6 +16,7 @@ use Yii;
  *
  * @property Users $client
  * @property Users $worker
+ * @property Statuses $statuses
  */
 class Orders extends \yii\db\ActiveRecord
 {
@@ -39,6 +40,7 @@ class Orders extends \yii\db\ActiveRecord
             [['pretTotal'], 'number'],
             [['clientID'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['clientID' => 'id']],
             [['workerID'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['workerID' => 'id']],
+            [['status'], 'exist', 'skipOnError' => true, 'targetClass' => Statuses::className(), 'targetAttribute' => ['status' => 'id']],
         ];
     }
 
@@ -48,11 +50,11 @@ class Orders extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => 'Numar comanda',
             'clientID' => 'Client ID',
             'workerID' => 'Worker ID',
-            'status' => 'Status',
-            'dataPlasat' => 'Data Plasat',
+            'status' => 'Status comanda',
+            'dataPlasat' => 'Data Plasarii',
             'pretTotal' => 'Pret Total',
         ];
     }
@@ -72,4 +74,12 @@ class Orders extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['id' => 'workerID']);
     }
+    
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getStatuses() 
+    { 
+       return $this->hasOne(Statuses::className(), ['id' => 'status']); 
+    } 
 }
