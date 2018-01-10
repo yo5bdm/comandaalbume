@@ -4,7 +4,10 @@
 if (!in_array(@$_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1'])) {
     die('You are not allowed to access this file.');
 }
-
+ini_set('upload_max_filesize', '400M');
+ini_set('post_max_size', '400M');
+ini_set('max_input_time', 1200); //20 minute
+ini_set('max_execution_time', 1200);
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'test');
 

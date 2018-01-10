@@ -15,16 +15,23 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?php if(Yii::$app->user->identity->userType == 2) echo Html::a('Actualizeaza', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']); ?>
+        <?php if(Yii::$app->user->identity->userType == 0) echo Html::a('Sterge', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
             ],
         ]) ?>
+        <?php 
+            foreach($status as $stat) {
+                if(Yii::$app->user->identity->userType == $stat->userType || Yii::$app->user->identity->userType == 0){
+                    echo Html::a('Marcheaza ca '.$stat->denumire, ['modifica', 'id' => $model->id,'status'=>$stat->id], ['class' => 'btn btn-primary']);
+                    echo "&nbsp";
+                }
+            }
+        ?>
     </p>
-
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -61,7 +68,5 @@ $this->params['breadcrumbs'][] = $this->title;
             'pretTotal',
         ],
     ]) ?>
-    <p>
-        <?= Html::a('Marcheaza ca ...', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-    </p>
+    
 </div>

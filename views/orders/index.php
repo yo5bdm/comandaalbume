@@ -14,29 +14,39 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
         <?= Html::a('Comanda noua', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [            
-            'id',
+            ['attribute' => 'id',
+                'label'=>'Nr Comanda',
+                'format' => 'raw',
+                'value'=>function ($data) {
+                    return Html::a('#'.$data->id.' / '.Yii::$app->formatter->asDate($data->dataPlasat),['orders/view','id'=>$data->id]);
+                },
+                
+            ],
             ['attribute' => 'clientID',
-                'header' => 'Nume Client',
+                'label' => 'Plasat de',
+                'format' => 'raw',
                 'value' => function( $data ) {
                     if($data->client === null) {
                         return '';
                     } else {
-                        return $data->client->numeComplet; 
+                        if(Yii::$app->user->identity->userType == 0 || Yii::$app->user->identity->userType == 1) { 
+                            return Html::a($data->client->numeComplet,['users','id'=>$data->client->id]); 
+                        }
+                        else { 
+                            return $data->client->numeComplet; 
+                        }
                     }
                 },
             ],
             ['attribute' => 'workerID',
-                'header' => 'Nume Lucrator',
+                'label' => 'Preluat de',
                 'value' => function( $data ) {
                     if($data->worker === null) {
                         return '';
@@ -46,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             ['attribute' => 'status',
-                'header' => 'Starea comenzii',
+                'label' => 'Starea comenzii',
                 'value' => function( $data ) {
                     if($data->status === null) {
                         return '';
@@ -55,15 +65,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 },
             ],
-            ['attribute' => 'dataPlasat',
-                'header' => 'Data comenzii',
+            ['attribute' =>'pretTotal',
+                'label' => 'Pret Total',
                 'value' => function( $data ) {
-                    return Yii::$app->formatter->asDate($data->dataPlasat);
+                    return $data->pretTotal." lei";
                 },
             ],
-            'pretTotal',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            //['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

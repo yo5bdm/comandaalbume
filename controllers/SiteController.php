@@ -32,11 +32,6 @@ class SiteController extends Controller
                         'actions' => ['login', 'inregistrare', 'index', 'contact'],
                         'roles' => ['?'],
                     ],
-                    [ //?
-                        'allow' => false,
-                        'actions' => ['about'],
-                        'roles' => ['?'],
-                    ],
                 ],
             ],
             'verbs' => [
@@ -71,6 +66,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->redirect(['orders/index']);
+        }
         return $this->render('index');
     }
 
@@ -82,12 +80,12 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->redirect(['orders/index']);
         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirect(['orders/index']);
         }
         return $this->render('login', [
             'model' => $model,

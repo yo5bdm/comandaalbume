@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Statuses;
+use app\models\AdreseLivrare;
 
 /**
- * StatusesSearch represents the model behind the search form of `app\models\Statuses`.
+ * AdreseLivrareSearch represents the model behind the search form of `app\models\AdreseLivrare`.
  */
-class StatusesSearch extends Statuses
+class AdreseLivrareSearch extends AdreseLivrare
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class StatusesSearch extends Statuses
     public function rules()
     {
         return [
-            [['id', 'userType', 'def'], 'integer'],
-            [['denumire'], 'safe'],
+            [['id', 'clientID', 'def'], 'integer'],
+            [['numeDestinatar', 'persoanaContact', 'telefon', 'adresa', 'oras', 'judet', 'codPostal'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class StatusesSearch extends Statuses
      */
     public function search($params)
     {
-        $query = Statuses::find();
+        $query = AdreseLivrare::find();
 
         // add conditions that should always apply here
 
@@ -60,11 +60,17 @@ class StatusesSearch extends Statuses
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'userType' => $this->userType,
+            'clientID' => $this->clientID,
             'def' => $this->def,
         ]);
 
-        $query->andFilterWhere(['like', 'denumire', $this->denumire]);
+        $query->andFilterWhere(['like', 'numeDestinatar', $this->numeDestinatar])
+            ->andFilterWhere(['like', 'persoanaContact', $this->persoanaContact])
+            ->andFilterWhere(['like', 'telefon', $this->telefon])
+            ->andFilterWhere(['like', 'adresa', $this->adresa])
+            ->andFilterWhere(['like', 'oras', $this->oras])
+            ->andFilterWhere(['like', 'judet', $this->judet])
+            ->andFilterWhere(['like', 'codPostal', $this->codPostal]);
 
         return $dataProvider;
     }

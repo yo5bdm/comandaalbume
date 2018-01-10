@@ -22,6 +22,9 @@ use Yii;
  * @property string $banca
  * @property string $contBancar
  * @property string $telefon
+ * 
+ * @property Adreselivrare[] $adreselivrares 
+ * @property Orders[] $orders
  */
 class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
@@ -104,4 +107,12 @@ class Users extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return self::findOne(['username'=>$username]);
     }
 //http://code-epicenter.com/how-to-login-user-from-a-database-in-yii-framework-2/
+    public function getOrders() 
+    { 
+        return $this->hasMany(Orders::className(), ['clientID' => 'id']); 
+    } 
+    
+    public function getAdreselivrares() {
+        return $this->hasMany(AdreseLivrare::className(), ['clientID' => 'id']); 
+    }
 }

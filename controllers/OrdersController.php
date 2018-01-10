@@ -8,6 +8,7 @@ use app\models\OrdersSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * OrdersController implements the CRUD actions for Orders model.
@@ -20,6 +21,21 @@ class OrdersController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [ //cei logati au voie sa vada tot
+                        //'actions' => ['index','view','update','delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [ //cei ce nu sunt logati sunt blocati
+                        'allow' => false,
+                        //'actions' => [],
+                        'roles' => ['?'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -52,8 +68,10 @@ class OrdersController extends Controller
      */
     public function actionView($id)
     {
+        $status = new \app\models\Statuses();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'status' =>$status->find()->all(),
         ]);
     }
 
@@ -117,6 +135,18 @@ class OrdersController extends Controller
 
         return $this->redirect(['index']);
     }
+    
+    public function actionModifica($id,$status) {
+        $reg = Orders::findOne($id);
+        $reg->status = $status;
+        $reg->workerID = Yii::$app->user->identity->id;
+        if($reg->update()) {
+            Yii::$app->session->setFlash('success', 'Comanda a fost actualizata cu succes');
+        } else {
+            Yii::$app->session->setFlash('error', 'Eroare la salvarea modificarilor');
+        }
+        return $this->redirect(['view','id'=>$id]);
+    }
 
     /**
      * Finds the Orders model based on its primary key value.
@@ -131,6 +161,6 @@ class OrdersController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Pagina cautata nu exista!');
     }
 }

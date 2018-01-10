@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $denumire
+ * @property int $userType
  * @property int $def
  *
  * @property Orders[] $orders
@@ -29,8 +30,8 @@ class Statuses extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['denumire'], 'required'],
-            [['def'], 'integer'],
+            [['denumire', 'userType'], 'required'],
+            [['userType', 'def'], 'integer'],
             [['denumire'], 'string', 'max' => 20],
             [['denumire'], 'unique'],
         ];
@@ -44,6 +45,7 @@ class Statuses extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'denumire' => 'Denumire',
+            'userType' => 'User Type',
             'def' => 'Def',
         ];
     }
@@ -57,7 +59,7 @@ class Statuses extends \yii\db\ActiveRecord
     }
     
     public function getDefault() {
-        return $this->find()->where(['def'=>1])->one()->id;
-    }
-
+       return $this->find()->where(['def'=>1])->one()->id;
+   }
+    
 }

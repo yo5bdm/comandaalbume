@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Users;
-use app\models\UsersSearch;
+use app\models\AdreseLivrare;
+use app\models\AdreseLivrareSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * UsersController implements the CRUD actions for Users model.
+ * AdreseLivrareController implements the CRUD actions for AdreseLivrare model.
  */
-class UsersController extends Controller
+class AdreselivrareController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,15 +30,12 @@ class UsersController extends Controller
     }
 
     /**
-     * Lists all Users models.
+     * Lists all AdreseLivrare models.
      * @return mixed
      */
     public function actionIndex()
     {
-        if(Yii::$app->user->identity->userType == 2 || Yii::$app->user->identity->userType == 1) {
-            $this->redirect(['update','id'=>Yii::$app->user->identity->id]);
-        }
-        $searchModel = new UsersSearch();
+        $searchModel = new AdreseLivrareSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -48,32 +45,29 @@ class UsersController extends Controller
     }
 
     /**
-     * Displays a single Users model.
+     * Displays a single AdreseLivrare model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        if(Yii::$app->user->identity->userType == 2 || Yii::$app->user->identity->userType == 1) {
-            $this->redirect(['update','id'=>Yii::$app->user->identity->id]);
-        }
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Users model.
+     * Creates a new AdreseLivrare model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Users();
+        $model = new AdreseLivrare();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['update', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -82,7 +76,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Updates an existing Users model.
+     * Updates an existing AdreseLivrare model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -91,24 +85,18 @@ class UsersController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        
-        if ($model->load(Yii::$app->request->post())) {
-            if(Yii::$app->user->identity->userType != 0 && $model->username != Yii::$app->user->identity->username) {
-                //print ca nu se poate schimba numele de utilizator
-            } elseif($model->save()){
-                Yii::$app->session->setFlash('success', 'Modificarile au fost salvate');
-                return $this->redirect(['update', 'id' => $model->id]);
-            }
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
-        $searchModel = new \app\models\AdreseLivrareSearch();
+
         return $this->render('update', [
             'model' => $model,
-            'adrese' => $searchModel->search(['clientID'=>$id]),
         ]);
     }
-    
+
     /**
-     * Deletes an existing Users model.
+     * Deletes an existing AdreseLivrare model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -122,18 +110,18 @@ class UsersController extends Controller
     }
 
     /**
-     * Finds the Users model based on its primary key value.
+     * Finds the AdreseLivrare model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Users the loaded model
+     * @return AdreseLivrare the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Users::findOne($id)) !== null) {
+        if (($model = AdreseLivrare::findOne($id)) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('Pagina cautata nu exista!');
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

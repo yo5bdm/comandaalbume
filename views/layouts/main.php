@@ -76,7 +76,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; Carpatic Studio <?= date('Y') ?>. Aplicatie realizata de <a href="https://erdeirudolf.com/">Erdei Rudolf</a></p>
+        <p class="text-center">&copy; Carpatic Studio <?= date('Y') ?>. Aplicatie realizata de <a href="https://erdeirudolf.com/">Erdei Rudolf</a></p>
     </div>
 </footer>
 

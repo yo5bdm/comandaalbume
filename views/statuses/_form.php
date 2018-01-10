@@ -14,6 +14,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'denumire')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'userType')->textInput() ?>
+
     <?= $form->field($model, 'def')->textInput() ?>
 
     <div class="form-group">
