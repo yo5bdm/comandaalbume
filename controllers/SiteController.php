@@ -58,7 +58,7 @@ class SiteController extends Controller
             ],
         ];
     }
-
+    
     /**
      * Displays homepage.
      *
@@ -140,11 +140,8 @@ class SiteController extends Controller
             var_dump($model->attributes);
             if ($model->validate()) {
                 $model->password = Yii::$app->getSecurity()->generatePasswordHash($model->password);
-                echo 'validat, salvez';
                 $model->save(); //save new user
                 return $this->redirect(['login']);
-            } else {
-                echo 'Nu s-a putut valida';
             }
         }
 

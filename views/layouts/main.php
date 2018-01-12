@@ -43,7 +43,7 @@ AppAsset::register($this);
             ['label' => 'Inregistrare', 'url' => ['/site/inregistrare']],
             ['label' => 'Login', 'url' => ['/site/login']],
         ];
-    } else {
+    } else { //de adaugat admin
         $menuItems=[
             ['label' => 'Comenzi', 'url' => ['/orders/index']],
             ['label' => 'Contul meu', 'url' => ['/users/update/'.Yii::$app->user->identity->id]],
