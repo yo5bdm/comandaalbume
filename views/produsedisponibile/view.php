@@ -10,6 +10,84 @@ use yii\grid\GridView;
 $this->title = $model->descriere;
 $this->params['breadcrumbs'][] = ['label' => 'Produse Disponibile', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="row">
+    <div class="col-lg-12">
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <p>
+        <?= Html::a('Actualizeaza', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Sterge', ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Are you sure you want to delete this item?',
+                'method' => 'post',
+            ],
+        ]) ?>
+        <?= Html::a('Adauga caracteristici',['#insert'],['class' => 'btn btn-primary', 'data-toggle'=>'modal','data-target'=>'#add-modal']) ?>
+    </p>
+    <h4>Caracteristici</h4>
+    <?= GridView::widget([
+        'dataProvider' => $listaElement,
+        'columns' => [
+            ['attribute' => 'descriere',
+                'label' => 'Descriere',
+                'format' => 'raw',
+                'value' => function( $data ) {
+                    return Html::a($data->descriere,['elementecomanda/view','id'=>$data->id]);
+                    //var_dump($data);
+                },
+            ],
+            ['attribute' => 'tipDeBaza',
+                'label' => 'Tip de baza',
+                'value' => function( $data ) {
+                    if($data->tipDeBaza === 1){
+                        return 'Lista';
+                    } else {
+                        return 'Descriere text';
+                    }
+                },
+            ],
+            ['attribute' => 'maiMulteBucatiIdentice',
+                'label' => 'Mai multe bucati identice',
+                'value' => function( $data ) {
+                    if($data->maiMulteBucatiIdentice === 1){
+                        return 'Da';
+                    } else {
+                        return 'Nu';
+                    }
+                },
+            ],
+            ['attribute' => 'maiMulteBucatiNeidentice',
+                'label' => 'Mai multe bucati neidentice',
+                'value' => function( $data ) {
+                    if($data->maiMulteBucatiNeidentice === 1){
+                        return 'Da';
+                    } else {
+                        return 'Nu';
+                    }
+                },
+            ],
+            'minBucati',
+            'maxBucati',
+            'observatii:ntext',
+        ],
+    ]); ?>
+    
+    </div>
+    <div class="modal fade" id="add-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="loginmodal-container">
+                <h3>Adauga Caracteristici produsului tau</h3>
+                <?= $this->render('..\elementecomanda\_form', [
+                    'model' => $modelElement,
+                ]) ?>
+            </div>
+        </div>
+    </div>
+
+</div>
+<?php 
 //https://bootsnipp.com/snippets/featured/clean-modal-login-form
 $this->registerCss(".loginmodal-container {
   padding: 30px;
@@ -91,74 +169,3 @@ $this->registerCss(".loginmodal-container {
   font-size: 12px;
 }");
 ?>
-<div class="row">
-    <div class="col-lg-12">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Actualizeaza', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Sterge', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-        <?= Html::a('Adauga caracteristici',['#insert'],['class' => 'btn btn-primary', 'data-toggle'=>'modal','data-target'=>'#add-modal']) ?>
-    </p>
-    <h4>Caracteristici</h4>
-    <?= GridView::widget([
-        'dataProvider' => $listaElement,
-        'columns' => [
-            'descriere',
-            ['attribute' => 'tipDeBaza',
-                'label' => 'Tip de baza',
-                'value' => function( $data ) {
-                    if($data->tipDeBaza === 1){
-                        return 'Lista';
-                    } else {
-                        return 'Descriere text';
-                    }
-                },
-            ],
-            ['attribute' => 'maiMulteBucatiIdentice',
-                'label' => 'Mai multe bucati identice',
-                'value' => function( $data ) {
-                    if($data->maiMulteBucatiIdentice === 1){
-                        return 'Da';
-                    } else {
-                        return 'Nu';
-                    }
-                },
-            ],
-            ['attribute' => 'maiMulteBucatiNeidentice',
-                'label' => 'Mai multe bucati neidentice',
-                'value' => function( $data ) {
-                    if($data->maiMulteBucatiNeidentice === 1){
-                        return 'Da';
-                    } else {
-                        return 'Nu';
-                    }
-                },
-            ],
-            'minBucati',
-            'maxBucati',
-            'observatii:ntext',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-    
-    </div>
-    <div class="modal fade" id="add-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog">
-            <div class="loginmodal-container">
-                <h3>Adauga Caracteristici produsului tau</h3>
-                <?= $this->render('..\elementecomanda\_form', [
-                    'model' => $modelElement,
-                ]) ?>
-            </div>
-        </div>
-    </div>
-
-</div>

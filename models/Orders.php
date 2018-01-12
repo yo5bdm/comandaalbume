@@ -17,6 +17,7 @@ use Yii;
  * @property Users $client
  * @property Users $worker
  * @property Statuses $statuses
+ * @property Produse[] $produses
  */
 class Orders extends \yii\db\ActiveRecord
 {
@@ -82,4 +83,13 @@ class Orders extends \yii\db\ActiveRecord
     { 
        return $this->hasOne(Statuses::className(), ['id' => 'status']); 
     } 
+    
+    /**
+    *  @return \yii\db\ActiveQuery
+    */
+    public function getProduses()
+    {
+        return $this->hasMany(Produse::className(), ['comandaID' => 'id']);
+    }
+
 }

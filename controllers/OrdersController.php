@@ -5,6 +5,10 @@ namespace app\controllers;
 use Yii;
 use app\models\Orders;
 use app\models\OrdersSearch;
+use app\models\Statuses;
+use app\models\StatusesSearch;
+use app\models\Produsedisponibile;
+use app\models\ProdusedisponibileSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -68,10 +72,13 @@ class OrdersController extends Controller
      */
     public function actionView($id)
     {
-        $status = new \app\models\Statuses();
+        $status = new Statuses();
+        $produseDisponibile = new Produsedisponibile();
         return $this->render('view', [
             'model' => $this->findModel($id),
             'status' =>$status->find()->all(),
+            'produseDisponibile' => $produseDisponibile->find()->all(),
+            'response'=>'',
         ]);
     }
 
@@ -146,6 +153,15 @@ class OrdersController extends Controller
             Yii::$app->session->setFlash('error', 'Eroare la salvarea modificarilor');
         }
         return $this->redirect(['view','id'=>$id]);
+    }
+    
+    public function actionPjax($id) {
+        $elComanda = new \app\models\Elementecomanda();
+        $prods = new \app\models\Produse();
+        return $this->renderPartial('_adaugaProdus',[
+            'response' => $elComanda->findAll(['produsID'=>$id]),
+            'model' => $prods,
+        ],true);
     }
 
     /**
