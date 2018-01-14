@@ -95,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php 
         //http://blog.neattutorials.com/yii2-pjax-tutorial/
         foreach($produseDisponibile as $produs) {
-            $idul = 'id'.$produs->id;
+            /*$idul = 'id'.$produs->id;
             Modal::begin([
                 'header' => '<h4>'.$produs->descriere.'</h4>',
                 'closeButton' => [],
@@ -112,7 +112,8 @@ $this->params['breadcrumbs'][] = $this->title;
             });";
             $this->registerJs($modalJs );
             Modal::end();
-            echo '&nbsp;';
+            echo '&nbsp;';*/
+            echo Html::a('Adauga '.$produs->descriere,['orders/adauga','id'=>$produs->id],['class' => 'btn btn-primary btn-block']);
         }?>
     </div>
     

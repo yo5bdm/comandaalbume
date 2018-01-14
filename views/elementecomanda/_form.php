@@ -15,6 +15,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'descriere')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'tipDeBaza')->dropDownList([
+        0 => 'Fara',
         1 => 'Lista',
         2 => 'Descriere text'
     ]) ?>

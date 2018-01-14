@@ -10,14 +10,23 @@ use yii\widgets\ActiveForm;
 <?php 
     $form = ActiveForm::begin();
     foreach($response as $el) {
-        if($el->tipDeBaza == 2) { 
-            echo $form->field($model, 'descriere')->textInput()->label($el->descriere); //lista 
-        } else {
-            echo $form->field($model, 'descriere')->dropDownList([
-                'Unu' => 'Unu',
-                'Doi' => 'Doi'
-            ])->label($el->descriere); //lista
+        switch ($el->tipDeBaza) {
+            case 1: //lista
+                echo $form->field($model, 'descriere')->dropDownList([
+                    'Unu' => 'Unu',
+                    'Doi' => 'Doi'
+                ])->label($el->descriere); //lista
+                break;
+            case 2: //text input
+                echo $form->field($model, 'descriere')->textInput()->label($el->descriere); //text input 
+                break;
+            default: //orice altceva
+                break;
         }
+        if($el->maiMulteBucatiIdentice === 1) {
+            echo $form->field($model,'descriere')->textInput(['type'=>'number'])->label($el->descriere);
+        }
+        echo '<hr/>';
     }
     echo Html::submitButton('Adauga', ['class' => 'btn btn-success']);
     ActiveForm::end();

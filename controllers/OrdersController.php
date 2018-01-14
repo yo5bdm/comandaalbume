@@ -72,6 +72,10 @@ class OrdersController extends Controller
      */
     public function actionView($id)
     {
+        $session = Yii::$app->session;
+        $session['order'] = [
+            'id' => $id, //comanda curenta
+        ];
         $status = new Statuses();
         $produseDisponibile = new Produsedisponibile();
         return $this->render('view', [
@@ -164,6 +168,20 @@ class OrdersController extends Controller
         ],true);
     }
 
+    public function actionAdauga($id) {
+        $session = Yii::$app->session;
+        /*$session['order'] = [
+            'id' => $id, //comanda curenta
+        ];
+        echo $session['order']['id'];*/
+        $elComanda = new \app\models\Elementecomanda();
+        $prods = new \app\models\Produse();
+        return $this->render('_adaugaProdus',[
+            'response' => $elComanda->findAll(['produsID'=>$id]),
+            'model' => $prods,
+        ]);
+    }
+    
     /**
      * Finds the Orders model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

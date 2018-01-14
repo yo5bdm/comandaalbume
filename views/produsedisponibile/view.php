@@ -41,10 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ['attribute' => 'tipDeBaza',
                 'label' => 'Tip de baza',
                 'value' => function( $data ) {
-                    if($data->tipDeBaza === 1){
-                        return 'Lista';
-                    } else {
-                        return 'Descriere text';
+                    switch($data->tipDeBaza) {
+                        case 1: return 'Lista';
+                        case 2: return 'Descriere text';
+                        default: return 'Fara';
                     }
                 },
             ],
