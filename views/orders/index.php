@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return '';
                     } else {
                         if(Yii::$app->user->identity->userType == 0 || Yii::$app->user->identity->userType == 1) { 
-                            return Html::a($data->client->numeComplet,['users','id'=>$data->client->id]); 
+                            return Html::a($data->client->numeComplet,['users/view','id'=>$data->client->id]); 
                         }
                         else { 
                             return $data->client->numeComplet; 

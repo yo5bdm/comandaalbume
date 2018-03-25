@@ -65,14 +65,22 @@ class ProduseController extends Controller
     public function actionCreate()
     {
         $model = new Produse();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $post = Yii::$app->request->post();
+        $json = json_decode($post['descriere']);
+        $model->comandaID = $json->idComanda;
+        $model->descriere = $post['descriere'];
+        if($model->save()) {
+            $refresh = new \app\models\Orders();
+            $refresh->refreshOrder($json->idComanda);
+            //return $this->redirect(['view', 'id' => $model->id]);
+            return 1;
+        } else {
+            return 0;
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+//        return $this->render('create', [
+//            'model' => $model,
+//        ]);
     }
 
     /**
@@ -108,6 +116,15 @@ class ProduseController extends Controller
 
         return $this->redirect(['index']);
     }
+    
+    public function actionListapreturi() {
+        $this->layout = "json.php";
+        return $this->render('listapreturi');
+    }
+    public function actionPreturimape() {
+        $this->layout = "json.php";
+        return $this->render('preturimape');
+    }
 
     /**
      * Finds the Produse model based on its primary key value.
@@ -124,4 +141,6 @@ class ProduseController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+    
+    
 }

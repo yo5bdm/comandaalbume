@@ -33,5 +33,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'descriere',
         ],
     ]) ?>
+    
 
 </div>

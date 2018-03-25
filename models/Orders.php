@@ -91,5 +91,18 @@ class Orders extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Produse::className(), ['comandaID' => 'id']);
     }
+    
+    public function refreshOrder($id) {
+        $totalComanda = 0;
+        $produse = Produse::findAll(['comandaID'=>$id]);
+        foreach($produse as $produs) {
+            $json = json_decode($produs->descriere);
+            $totalComanda += $json->pretTotal;
+        }
+        $order = Orders::find()->where(['id'=>$id])->one();
+        print_r($order);
+        $order->pretTotal = $totalComanda;
+        $order->save();
+    }
 
 }

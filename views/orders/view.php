@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\DetailView;
 use yii\widgets\Pjax;
+use yii\grid\GridView;
 
 /* @var $this View */
 /* @var $model Orders */
@@ -69,7 +70,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         }
                     },
                 ],
-                'pretTotal',
+                ['attribute' => 'pretTotal',
+                    'header' => 'Pret total comanda'
+                ],
             ],
         ]); } else {
             echo DetailView::widget([
@@ -85,36 +88,64 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                         },
                     ],
-                    'pretTotal',
+                    'pretTotal'
                 ],
             ]);
         } ?>
+    <h3>Lista de produse din comanda curenta</h3>
+    <?= GridView::widget([
+        'dataProvider' => $produse,
+        'columns' => [
+            [
+                'attribute' => 'descriere',
+                'format' => 'text',
+                'label' => 'Descriere',
+                'format' => 'raw',
+                'value' =>function($data) {
+                    $json = json_decode($data->descriere);
+                    $ret ="<h4>Produsul comandat: <strong>".ucfirst($json->produs)."</strong></h4>";
+                    $ret .= "<p>Pret: <strong>".$json->pretTotal." Lei</strong></p>";
+                    $ret .= "<p>Obs: <strong>'".$json->observatii."'</strong></p>";
+                    return $ret;
+                }
+            ],
+            ['class' => 'yii\grid\ActionColumn',
+                'header' => 'Actions',
+                'template'=>'{leadView} {leadUpdate} {leadDelete}'
+//                'buttons'  => [
+//                    'leadView'   => function ($url, $model) {
+//                        $url = Url::to(['controller/lead-view', 'id' => $model->whatever_id]);
+//                        return Html::a('<span class="fa fa-eye"></span>', $url, ['title' => 'view']);
+//                    },
+//                    'leadUpdate' => function ($url, $model) {
+//                        $url = Url::to(['controller/lead-update', 'id' => $model->whatever_id]);
+//                        return Html::a('<span class="fa fa-pencil"></span>', $url, ['title' => 'update']);
+//                    },
+//                    'leadDelete' => function ($url, $model) {
+//                        $url = Url::to(['controller/lead-delete', 'id' => $model->whatever_id]);
+//                        return Html::a('<span class="fa fa-trash"></span>', $url, [
+//                            'title'        => 'delete',
+//                            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+//                            'data-method'  => 'post',
+//                        ]);
+//                    },
+//                ]
+            ],
+        ],
+    ]) ?>
+    
+    
     </div>
     <div class="col-lg-3">
         <h3 class="text-center">Adauga in comanda:</h3>
         <?php 
         //http://blog.neattutorials.com/yii2-pjax-tutorial/
-        foreach($produseDisponibile as $produs) {
-            /*$idul = 'id'.$produs->id;
-            Modal::begin([
-                'header' => '<h4>'.$produs->descriere.'</h4>',
-                'closeButton' => [],
-                'toggleButton' => ['label' => $produs->descriere, 'class' => 'btn btn-primary btn-block', 'id'=>$idul],
-            ]); 
-            $requestUrl = yii\helpers\Url::to(['orders/pjax','id'=>$produs->id]);
-            $modalJs = "
-            $('#$idul').on('click', function () {    
-                $.get('$requestUrl', {},
-                    function (data) {
-                       $('.modal-body').html(data);
-                    }  
-                ); 
-            });";
-            $this->registerJs($modalJs );
-            Modal::end();
-            echo '&nbsp;';*/
-            echo Html::a('Adauga '.$produs->descriere,['orders/adauga','id'=>$produs->id],['class' => 'btn btn-primary btn-block']);
-        }?>
+        echo Html::a('Adauga Album',['orders/adaugaalbum','id'=>1],['class' => 'btn btn-primary btn-block']);
+        //echo Html::a('Adauga Cutie Album Lux',['orders/adaugacutie','id'=>1],['class' => 'btn btn-primary btn-block']);
+        echo Html::a('Adauga Mape DVD',['orders/adaugamapadvd','id'=>1],['class' => 'btn btn-primary btn-block']);
+        //echo Html::a('Adauga Print foto',['orders/adaugaprint','id'=>1],['class' => 'btn btn-primary btn-block']);
+        //echo Html::a('Adauga Cutie Stick',['orders/adaugacutiestick','id'=>1],['class' => 'btn btn-primary btn-block']);
+        ?>
     </div>
     
 </div>

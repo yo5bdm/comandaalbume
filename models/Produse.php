@@ -31,7 +31,7 @@ class Produse extends \yii\db\ActiveRecord
         return [
             [['comandaID'], 'required'],
             [['comandaID'], 'integer'],
-            [['descriere'], 'string', 'max' => 30],
+            [['descriere'], 'string'],
             [['comandaID'], 'exist', 'skipOnError' => true, 'targetClass' => Orders::className(), 'targetAttribute' => ['comandaID' => 'id']],
         ];
     }

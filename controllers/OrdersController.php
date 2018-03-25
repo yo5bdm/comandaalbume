@@ -7,8 +7,7 @@ use app\models\Orders;
 use app\models\OrdersSearch;
 use app\models\Statuses;
 use app\models\StatusesSearch;
-use app\models\Produsedisponibile;
-use app\models\ProdusedisponibileSearch;
+use app\models\Produse;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -77,11 +76,15 @@ class OrdersController extends Controller
             'id' => $id, //comanda curenta
         ];
         $status = new Statuses();
-        $produseDisponibile = new Produsedisponibile();
+        $produs = new Orders();
+        $produs->refreshOrder($id);
+        $produse = new \app\models\ProduseSearch();
+        $produseModel = $produse->search(['comandaID'=>$id]);
+        $produseModel->query->andFilterWhere(['comandaID'=>$id]);
         return $this->render('view', [
             'model' => $this->findModel($id),
             'status' =>$status->find()->all(),
-            'produseDisponibile' => $produseDisponibile->find()->all(),
+            'produse' =>$produseModel,
             'response'=>'',
         ]);
     }
@@ -125,6 +128,8 @@ class OrdersController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $produs = new Orders();
+            $produs->refreshOrder($id);
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -152,6 +157,8 @@ class OrdersController extends Controller
         $reg->status = $status;
         $reg->workerID = Yii::$app->user->identity->id;
         if($reg->update()) {
+            $produs = new Orders();
+            $produs->refreshOrder($id);
             Yii::$app->session->setFlash('success', 'Comanda a fost actualizata cu succes');
         } else {
             Yii::$app->session->setFlash('error', 'Eroare la salvarea modificarilor');
@@ -168,18 +175,32 @@ class OrdersController extends Controller
         ],true);
     }
 
-    public function actionAdauga($id) {
-        $session = Yii::$app->session;
-        /*$session['order'] = [
-            'id' => $id, //comanda curenta
-        ];
-        echo $session['order']['id'];*/
-        $elComanda = new \app\models\Elementecomanda();
-        $prods = new \app\models\Produse();
+    public function actionAdaugaalbum($id) {
         return $this->render('_adaugaProdus',[
-            'response' => $elComanda->findAll(['produsID'=>$id]),
-            'model' => $prods,
+            'id' => $id
         ]);
+    }
+    
+    public function actionAdaugamapadvd($id) {
+        return $this->render('mapedvd',[
+            'id' => $id
+        ]);
+    }
+    
+    public function actionAdaugacutie($id) {
+        return $this->render('mapedvd',[
+            'id' => $id
+        ]);
+    }
+    public function actionAdaugaprint($id) {
+        return $this->render('mapedvd',[
+            'id' => $id
+        ]);
+    }
+    public function actionAdaugacutiestick($id) {
+        return $this->render('mapedvd',[
+            'id' => $id
+        ]); 
     }
     
     /**
