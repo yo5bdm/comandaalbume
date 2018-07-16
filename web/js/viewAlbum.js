@@ -1,24 +1,146 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 var app = angular.module("myApp", []);
 app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$http) {
-    var promise = $http.get(home+'produse/listapreturi').then(function(response){
-        console.log(response);
-        var json = response.data.records;
-        for(key in json) {
-            $scope[key] = json[key];
-        }
-    });
+    $scope.listaPreturi = function() { 
+        return $http.get(home+'produse/listapreturi').then(function(response){
+            var json = response.data.records;
+            for(var key in json) {
+                $scope[key] = json[key];
+            }
+        });
+    };
+    $scope.incarcaComanda = function(data){
+        return $http.get(home+'produse/produs/'+idProdus).then(function(response){
+            var json2 = response.data;
+            $scope.client = json2;
+        });
+    };
+    
     //metode
-    promise.then(function(data){
+    Promise.all([
+        $scope.listaPreturi(),
+        $scope.incarcaComanda()
+    ]).then(function(data){  
+        //metode view
+        $scope.view = {
+            blocInterior : function() {
+                return $scope.albume.find(album => album.id == $scope.client.albumSelectat).text;
+            },
+            lipire: function() {
+                return $scope.lipire.find(lip => lip.id == $scope.client.lipireSel).text;
+            },
+            copertaBuc: function() {
+                return $scope.bucCoperta.find(cop => cop.id == $scope.client.bucCopertaSel).text;
+            },
+            codCopertaFata: function() {
+                return $scope.coduriCoperta.find(cop=> cop.id == $scope.client.codCopFata).text;
+            },
+            codCopertaSpate: function() {
+                return $scope.coduriCoperta.find(cop=> cop.id == $scope.client.codCopSpate).text;
+            },
+            codCopertaCotor: function() {
+                return $scope.coduriCoperta.find(cop=> cop.id == $scope.client.codCopCotor).text;
+            },
+            tipCopertaFata: function() {
+                var cop = $scope.copertaFata;
+                for(var i=0;i<cop.length;i++) {
+                    var c = cop[i];
+                    for(var j=0;j<c.values.length;j++) {
+                        if(c.values[j].id == $scope.client.copertaFataSel) {
+                            return c.label+ ": " +c.values[j].text;
+                        }
+                    }
+                }
+            },
+            laminare: function() {
+                return $scope.laminare.find(lam => lam.id == $scope.client.laminareSel).text;
+            },
+            pozitiePaspartuCoperta: function() {
+                return $scope.pozitieElement.find(poz => poz.id == $scope.client.pozitiePaspartuCoperta).text;
+            },
+            dimensiunePaspartuCopertaAlbum: function() {
+                return $scope.dimensiunePaspartu.find(dim => dim.id == $scope.client.dimensiunePaspartuSel).text;
+            },
+            codMaterialRamaPaspartuAlbum: function() {
+                return $scope.coduriCoperta.find(cop => cop.id == $scope.client.codRamaPaspartuSel).text;
+            },
+            tipCanvas: function() {
+                return $scope.tipCanvas.find(cnv => cnv.id == $scope.client.tipCanvasSel).text;
+            },
+            pozitiePlexiglasCoperta: function() {
+                return $scope.pozitieElement.find(poz => poz.id == $scope.client.pozitiePlexiglasCoperta).text;
+            },
+            
+            tipInscriptionare: function() {
+                return $scope.inscriptionare.find(ins => ins.id == $scope.client.tipInscriptionareSel).text;
+            },
+            optiuneInscriptionareCopertaFata: function() {
+                return $scope.optiuniInscriptionare.find(opt => opt.id == $scope.client.optiuniInscriptionareFata).text;
+            },
+            fontCopertaFata: function() {
+                return $scope.fonturi.find(f => f.id == $scope.client.fontTextCopertaFata).text;
+            },
+            pozitieTextCopertaFata: function() {
+                return $scope.pozitieElement.find(p => p.id == $scope.client.pozitieTextCopertaFata).text;
+            },
+            optiuneInscriptionareCopertaSpate: function() {
+                return $scope.optiuniInscriptionare.find(opt => opt.id == $scope.client.optiuniInscriptionareSpate).text;
+            },
+            fontCopertaSpate: function() {
+                return $scope.fonturi.find(f => f.id == $scope.client.fontTextCopertaSpate).text;
+            },
+            pozitieTextCopertaSpate: function() {
+                return $scope.pozitieElement.find(p => p.id == $scope.client.pozitieTextCopertaSpate).text;
+            },
+            coltare: function() {
+                return $scope.coltare.find(c => c.id == $scope.client.coltareSel).text;
+            },
+            faceOff: function() {
+                return $scope.faceOff.find(f=> f.id == $scope.client.faceOffSel).text;
+            },
+            cutieCarton: function() {
+                return $scope.cutieCarton.find(c => c.id == $scope.client.cutieCartonSel).text;
+            },
+            cutieLux: {
+                coltare: function() {
+                    return $scope.cutielux.coltare.find(c=> c.id == $scope.client.cutieLux.coltare).text;
+                },
+                coperta: function() {
+                    return $scope.cutielux.coperta.find(c => c.id == $scope.client.cutieLux.coperta).text;
+                },
+                dimPlexiglas: function() {
+                    return $scope.cutielux.dimensiuniplexiglas.find(d => d.id == $scope.client.cutieLux.dimensiuniplexiglas).text;
+                },
+                inscriptionare: function() {
+                    return $scope.cutielux.inscriptionare.find(i => i.id == $scope.client.cutieLux.inscriptionare).text;
+                },
+                font: function() {
+                    return $scope.fonturi.find(f => f.id == $scope.client.cutieLux.font).text;
+                },
+                pozitie: function() {
+                    return $scope.pozitieElement.find(p => p.id == $scope.client.cutieLux.pozitieText).text;
+                },
+                panglica: function() {
+                    return $scope.cutielux.panglica.find(p => p.id == $scope.client.cutieLux.panglica).text;
+                },
+                materialCadru: function() {
+                    return $scope.cutielux.materialcadru.find(m => m.id == $scope.client.cutieLux.materialcadru).text;
+                }
+            }
+        };
+        
+
+        
+        
         //metode retrieve
+        $scope.ucfirst = function(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        };
         $scope.getCopFata = function(ide) {
             var ret = null;
             var cop = $scope.copertaFata;
+            var label="";
             for(var i=0;i<cop.length;i++) {
+                label = cop[i].label;
                 for(var j=0;j<cop[i].values.length;j++){
                     if(Number(cop[i].values[j].id) === Number(ide)) { 
                         ret=cop[i].values[j];
@@ -156,58 +278,6 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
         //ce selecteaza userul
         $scope.bucReplica=1;
         $scope.replicaSelectata;
-        $scope.client = {};
-        $scope.client.replici = [];
-        $scope.client.produs="album";
-        $scope.client.idComanda = idCd;
-        $scope.client.nrMontaje=20; //https://docs.angularjs.org/api/ng/input/input%5Brange%5D
-        $scope.client.albumSelectat='15'; //id-ul blocului interior selectat
-        $scope.client.designColajeSel='1';
-        $scope.client.copertaBuretataSel='1';
-        $scope.client.codCopFata='1';
-        $scope.client.codCopSpate='1';
-        $scope.client.codCopCotor='1';
-        $scope.client.bucCopertaSel='1';
-        $scope.client.coltareSel='1';
-        $scope.client.cutieCartonSel='1';
-        $scope.client.faceOffSel='1';
-        $scope.client.copertaFataSel='1';
-        $scope.client.lipireSel='1';
-        $scope.client.laminareSel = '1';
-        $scope.client.tipCanvasSel = '1';
-        
-        $scope.client.pozitiePaspartuCoperta='1';
-        $scope.client.dimensiunePaspartuSel = '1';
-        $scope.client.codRamaPaspartuSel = '1';
-        $scope.client.pozitiePlexiglasCoperta = '1';
-        //text coperta
-        $scope.client.tipInscriptionareSel='1';
-        $scope.client.optiuniInscriptionareFata='1';
-        $scope.client.fontTextCopertaFata = '1';
-        $scope.client.textCopertaFata='';
-        $scope.client.pozitieTextCopertaFata='1';
-        $scope.client.optiuniInscriptionareSpate='1';
-        $scope.client.fontTextCopertaSpate = '1';
-        $scope.client.textCopertaSpate='';
-        $scope.client.pozitieTextCopertaSpate='1';
-        //fisiere
-        $scope.client.linkFisiere='';
-        //observatii
-        $scope.client.observatii='';
-        $scope.client.pretTotal=0;
-        
-        $scope.client.cutieLux ={};
-        $scope.client.cutieLux.da='0';
-        $scope.client.cutieLux.coltare='1';
-        $scope.client.cutieLux.coperta='1';
-        $scope.client.cutieLux.dimensiuniplexiglas='1';
-        $scope.client.cutieLux.inscriptionare='1';
-        $scope.client.cutieLux.text="";
-        $scope.client.cutieLux.font='1';
-        $scope.client.cutieLux.pozitieText='1';
-        $scope.client.cutieLux.panglica='1';
-        $scope.client.cutieLux.materialcadru='1';
-        
         $scope.getFontCutie = function() {
             return $scope.get("fonturi",$scope.client.cutieLux.font).link;
         };
@@ -251,26 +321,9 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
             ret += $scope.totalCutieLux();
             return ret;        
         };
-        $scope.salveazaComanda = function() {
-            $scope.client.pretTotal = $scope.calculeaza();
-            var parameter = {
-                "_csrf":csrfT,
-                "descriere":JSON.stringify($scope.client)
-            };
-            console.log(parameter);
-            var url = home + "produse/create";
-            $http.post(url, parameter).then(
-                function(response) {
-                    if(response.data === 1) { //salvare reusita
-                        $window.location.href= home+"orders/view/"+idCd;
-                    } else { //eroare din PHP
-                        alert("Salvare nereusita! Te rog sa verifici datele si sa incerci din nou.");
-                    }
-                },
-                function(response) { //eroare de comunicare
-                     alert("Eroare de comunicare, va rugam incercati mai tarziu "+response);
-                }
-            );
-        };
+        $scope.$apply(function(){
+            $scope.ucfirst("ana");
+            $scope.viewBlocInterior();
+        });
     });
 }]);

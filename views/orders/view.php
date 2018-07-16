@@ -93,6 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]);
         } ?>
     <h3>Lista de produse din comanda curenta</h3>
+    <?php //Pjax::begin() ?>
     <?= GridView::widget([
         'dataProvider' => $produse,
         'columns' => [
@@ -110,30 +111,27 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             ['class' => 'yii\grid\ActionColumn',
-                'header' => 'Actions',
-                'template'=>'{leadView} {leadUpdate} {leadDelete}'
-//                'buttons'  => [
-//                    'leadView'   => function ($url, $model) {
-//                        $url = Url::to(['controller/lead-view', 'id' => $model->whatever_id]);
-//                        return Html::a('<span class="fa fa-eye"></span>', $url, ['title' => 'view']);
-//                    },
-//                    'leadUpdate' => function ($url, $model) {
-//                        $url = Url::to(['controller/lead-update', 'id' => $model->whatever_id]);
-//                        return Html::a('<span class="fa fa-pencil"></span>', $url, ['title' => 'update']);
-//                    },
-//                    'leadDelete' => function ($url, $model) {
-//                        $url = Url::to(['controller/lead-delete', 'id' => $model->whatever_id]);
-//                        return Html::a('<span class="fa fa-trash"></span>', $url, [
-//                            'title'        => 'delete',
-//                            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-//                            'data-method'  => 'post',
-//                        ]);
-//                    },
-//                ]
+                'header' => 'Actiuni',
+                'template'=>'{leadView} {leadUpdate} {leadDelete}',
+                'buttons' => [
+                    'leadView'   => function ($url, $model) { //view
+                        return Html::a('<span class="glyphicon glyphicon-search"></span>', ['produse/view', 'id' => $model->id], ['title' => 'view']);
+                    },
+                    'leadUpdate' => function ($url, $model) { //edit
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['produse/update', 'id' => $model->id], ['title' => 'update']);
+                    },
+                    'leadDelete' => function ($url, $model) { //delete
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['produse/delete', 'id' => $model->id], [
+                            'title'        => 'delete',
+                            'data-confirm' => Yii::t('yii', 'Sigur vrei sa stergi?'),
+                            'data-method'  => 'post',
+                        ]);
+                    },
+                ]
             ],
         ],
     ]) ?>
-    
+    <?php //Pjax::end() ?>
     
     </div>
     <div class="col-lg-3">

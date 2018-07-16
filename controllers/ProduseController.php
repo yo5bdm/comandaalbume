@@ -52,11 +52,34 @@ class ProduseController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        $prod = Produse::find()->where(['id'=>$id])->one();
+        $produs = json_decode($prod->descriere);
+        switch($produs->produs){
+            case 'album':
+                $view = '_viewAlbum';
+                break;
+            case 'mapadvd':
+                $view = '_mapaDvd';
+                break;
+            default:
+                $view = 'view';
+        }
+        
+        return $this->render($view, [
+            'id'=>$id,
             'model' => $this->findModel($id),
         ]);
     }
-
+    
+    public function actionProdus($id) {
+        $produs = Produse::find()->where(['id'=>$id])->one();
+        $this->layout = "json.php";
+        //$data['album'] = ;
+        return $this->render('json',[
+            'data' =>  $produs->descriere
+        ]);
+    }
+    
     /**
      * Creates a new Produse model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -112,9 +135,9 @@ class ProduseController extends Controller
      */
     public function actionDelete($id)
     {
+        
         $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        return $this->redirect(Yii::$app->request->referrer);
     }
     
     public function actionListapreturi() {

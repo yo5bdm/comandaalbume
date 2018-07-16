@@ -120,7 +120,7 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
     //metode
     promise.then(function(data){
         $scope.client={};
-        $scope.client.produs="Mapa Dvd";
+        $scope.client.produs="mapadvd";
         $scope.client.observatii='';
         $scope.client.idComanda = <?=$id?>;
         $scope.client.tip="Premium";

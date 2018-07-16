@@ -100,7 +100,6 @@ class Orders extends \yii\db\ActiveRecord
             $totalComanda += $json->pretTotal;
         }
         $order = Orders::find()->where(['id'=>$id])->one();
-        print_r($order);
         $order->pretTotal = $totalComanda;
         $order->save();
     }
