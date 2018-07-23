@@ -198,7 +198,7 @@ class OrdersController extends Controller
         ]);
     }
     public function actionAdaugacutiestick($id) {
-        return $this->render('mapedvd',[
+        return $this->render('cutieStick',[
             'id' => $id
         ]); 
     }

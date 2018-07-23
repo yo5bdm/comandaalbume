@@ -40,9 +40,7 @@ var home = "<?php echo Yii::$app->homeUrl; ?>";
                 <h4 class="card-title text-center">Coperta</h4>
             </div>
             <div class="panel-body">
-                <p>Coperta buretata: <strong>{{(client.copertaBuretataSel==2)?"Da":"Nu"}}</strong></p>
-                <p>Coperta din: <strong>{{view.copertaBuc()}}</strong></p>
-                <p>Cod coperta <span ng-show="client.bucCopertaSel!=1">fata</span>: <strong>{{view.codCopertaFata()}}</strong></p>
+                <p>Coperta buretata: <strong>{{(client.copertaBuretataSel==2)?"Da":"Nu"}}</strong>; Coperta din: <strong>{{view.copertaBuc()}}</strong>; Cod coperta <span ng-show="client.bucCopertaSel!=1">fata</span>: <strong>{{view.codCopertaFata()}}</strong></p>
                 <p ng-show="client.bucCopertaSel!=1">Cod coperta spate: <strong>{{view.codCopertaSpate()}}</strong></p>
                 <p ng-show="client.bucCopertaSel!=1 && client.bucCopertaSel!=2">Cod cotor: <strong>{{view.codCopertaCotor()}}</strong></p>
                 <p>Coperta fata: <strong>{{view.tipCopertaFata()}}</strong></p>

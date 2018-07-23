@@ -1,8 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 var app = angular.module("myApp", []);
 app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$http) {
     var promise = $http.get(home+'produse/listapreturi').then(function(response){
@@ -156,57 +151,65 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
         //ce selecteaza userul
         $scope.bucReplica=1;
         $scope.replicaSelectata;
-        $scope.client = {};
-        $scope.client.replici = [];
-        $scope.client.produs="album";
-        $scope.client.idComanda = idCd;
-        $scope.client.nrMontaje=20; //https://docs.angularjs.org/api/ng/input/input%5Brange%5D
-        $scope.client.albumSelectat='15'; //id-ul blocului interior selectat
-        $scope.client.designColajeSel='1';
-        $scope.client.copertaBuretataSel='1';
-        $scope.client.codCopFata='1';
-        $scope.client.codCopSpate='1';
-        $scope.client.codCopCotor='1';
-        $scope.client.bucCopertaSel='1';
-        $scope.client.coltareSel='1';
-        $scope.client.cutieCartonSel='1';
-        $scope.client.faceOffSel='1';
-        $scope.client.copertaFataSel='1';
-        $scope.client.lipireSel='1';
-        $scope.client.laminareSel = '1';
-        $scope.client.tipCanvasSel = '1';
         
-        $scope.client.pozitiePaspartuCoperta='1';
-        $scope.client.dimensiunePaspartuSel = '1';
-        $scope.client.codRamaPaspartuSel = '1';
-        $scope.client.pozitiePlexiglasCoperta = '1';
-        //text coperta
-        $scope.client.tipInscriptionareSel='1';
-        $scope.client.optiuniInscriptionareFata='1';
-        $scope.client.fontTextCopertaFata = '1';
-        $scope.client.textCopertaFata='';
-        $scope.client.pozitieTextCopertaFata='1';
-        $scope.client.optiuniInscriptionareSpate='1';
-        $scope.client.fontTextCopertaSpate = '1';
-        $scope.client.textCopertaSpate='';
-        $scope.client.pozitieTextCopertaSpate='1';
-        //fisiere
-        $scope.client.linkFisiere='';
-        //observatii
-        $scope.client.observatii='';
-        $scope.client.pretTotal=0;
+        $scope.client = {
+            produs:"album",
+            replici:[],
+            idComanda:idCd,
+            nrMontaje:20, //https://docs.angularjs.org/api/ng/input/input%5Brange%5D
+            albumSelectat:'15', //id-ul blocului interior selectat
+            designColajeSel:'1',
+            copertaBuretataSel:'1',
+            codCopFata:'1',
+            codCopSpate:'1',
+            codCopCotor:'1',
+            bucCopertaSel:'1',
+            coltareSel:'1',
+            cutieCartonSel:'1',
+            faceOffSel:'1',
+            copertaFataSel:'1',
+            lipireSel:'1',
+            laminareSel : '1',
+            tipCanvasSel : '1',
+            
+            pozitiePaspartuCoperta:'1',
+            dimensiunePaspartuSel : '1',
+            codRamaPaspartuSel : '1',
+            pozitiePlexiglasCoperta : '1',
+            
+            //text coperta
+            tipInscriptionareSel:'1',
+            optiuniInscriptionareFata:'1',
+            fontTextCopertaFata : '1',
+            textCopertaFata:'',
+            pozitieTextCopertaFata:'1',
+            optiuniInscriptionareSpate:'1',
+            fontTextCopertaSpate : '1',
+            textCopertaSpate:'',
+            pozitieTextCopertaSpate:'1',
+            
+            //fisiere
+            linkFisiere:'',
+            
+            //observatii
+            observatii:'',
+            pretTotal:0,
+            
+            //optiuni cutie lux
+            cutieLux:{
+                da:'0',
+                coltare:'1',
+                coperta:'1',
+                dimensiuniplexiglas:'1',
+                inscriptionare:'1',
+                text:"",
+                font:'1',
+                pozitieText:'1',
+                panglica:'1',
+                materialcadru:'1'
+            }            
+        };
         
-        $scope.client.cutieLux ={};
-        $scope.client.cutieLux.da='0';
-        $scope.client.cutieLux.coltare='1';
-        $scope.client.cutieLux.coperta='1';
-        $scope.client.cutieLux.dimensiuniplexiglas='1';
-        $scope.client.cutieLux.inscriptionare='1';
-        $scope.client.cutieLux.text="";
-        $scope.client.cutieLux.font='1';
-        $scope.client.cutieLux.pozitieText='1';
-        $scope.client.cutieLux.panglica='1';
-        $scope.client.cutieLux.materialcadru='1';
         
         $scope.getFontCutie = function() {
             return $scope.get("fonturi",$scope.client.cutieLux.font).link;
@@ -251,6 +254,8 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
             ret += $scope.totalCutieLux();
             return ret;        
         };
+
+        
         $scope.salveazaComanda = function() {
             $scope.client.pretTotal = $scope.calculeaza();
             var parameter = {

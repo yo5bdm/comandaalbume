@@ -61,6 +61,9 @@ class ProduseController extends Controller
             case 'mapadvd':
                 $view = '_mapaDvd';
                 break;
+            case 'cutieStick':
+                $view = '_cutieStick';
+                break;
             default:
                 $view = 'view';
         }
@@ -147,6 +150,10 @@ class ProduseController extends Controller
     public function actionPreturimape() {
         $this->layout = "json.php";
         return $this->render('preturimape');
+    }
+    public function actionPreturicutiutestick() {
+        $this->layout = "json.php";
+        return $this->render('preturicutiutestick');
     }
 
     /**

@@ -15,7 +15,7 @@ $this->title = "Comanda #".$model->id.' / '.Yii::$app->formatter->asDate($model-
 $this->params['breadcrumbs'][] = ['label' => 'Comenzi', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="row">
+<div class="row" ng-app="myApp" ng-controller="myCtrl">
     <div class="col-lg-9">
         <h1><?= Html::encode($this->title) ?></h1>
         <p>
@@ -134,7 +134,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php //Pjax::end() ?>
     
     </div>
-    <div class="col-lg-3">
+    <div class="col-lg-3" ng-hide="isWorker()">
         <h3 class="text-center">Adauga in comanda:</h3>
         <?php 
         //http://blog.neattutorials.com/yii2-pjax-tutorial/
@@ -142,11 +142,21 @@ $this->params['breadcrumbs'][] = $this->title;
         //echo Html::a('Adauga Cutie Album Lux',['orders/adaugacutie','id'=>1],['class' => 'btn btn-primary btn-block']);
         echo Html::a('Adauga Mape DVD',['orders/adaugamapadvd','id'=>1],['class' => 'btn btn-primary btn-block']);
         //echo Html::a('Adauga Print foto',['orders/adaugaprint','id'=>1],['class' => 'btn btn-primary btn-block']);
-        //echo Html::a('Adauga Cutie Stick',['orders/adaugacutiestick','id'=>1],['class' => 'btn btn-primary btn-block']);
+        echo Html::a('Adauga Cutie Stick',['orders/adaugacutiestick','id'=>1],['class' => 'btn btn-primary btn-block']);
         ?>
     </div>
     
 </div>
+<script type="text/javascript">
+  var app = angular.module("myApp", []);
+app.controller("myCtrl", ['$scope', function($scope) {
+    $scope.userType = <?=Yii::$app->user->identity->userType?>;
+    $scope.isWorker = function() {
+      console.log($scope.userType);
+      if($scope.userType==1) return true;
+    };
+}]);
+</script>
 <?php 
 //https://bootsnipp.com/snippets/featured/clean-modal-login-form
 $this->registerCss(".loginmodal-container {

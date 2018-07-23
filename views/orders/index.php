@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function( $data ) {
                     if($data->client === null) {
-                        return '';
+                        return '[invalid user]';
                     } else {
                         if(Yii::$app->user->identity->userType == 0 || Yii::$app->user->identity->userType == 1) { 
                             return Html::a($data->client->numeComplet,['users/view','id'=>$data->client->id]); 
@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Preluat de',
                 'value' => function( $data ) {
                     if($data->worker === null) {
-                        return '';
+                        return '[nepreluat]';
                     } else {
                         return $data->worker->numeComplet; 
                     }
@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Starea comenzii',
                 'value' => function( $data ) {
                     if($data->status === null) {
-                        return '';
+                        return '[invalid status]';
                     } else {
                         return $data->statuses->denumire; 
                     }
