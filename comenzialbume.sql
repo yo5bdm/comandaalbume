@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.8.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: 16 Iul 2018 la 17:58
--- Versiune server: 10.1.25-MariaDB
--- PHP Version: 7.1.7
+-- Host: localhost
+-- Generation Time: Jul 31, 2018 at 08:34 PM
+-- Server version: 10.1.34-MariaDB
+-- PHP Version: 7.2.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,7 +25,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structura de tabel pentru tabelul `adreselivrare`
+-- Table structure for table `adreselivrare`
 --
 
 CREATE TABLE `adreselivrare` (
@@ -44,7 +44,7 @@ CREATE TABLE `adreselivrare` (
 -- --------------------------------------------------------
 
 --
--- Structura de tabel pentru tabelul `migration`
+-- Table structure for table `migration`
 --
 
 CREATE TABLE `migration` (
@@ -53,19 +53,20 @@ CREATE TABLE `migration` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_romanian_ci;
 
 --
--- Salvarea datelor din tabel `migration`
+-- Dumping data for table `migration`
 --
 
 INSERT INTO `migration` (`version`, `apply_time`) VALUES
 ('m000000_000000_base', 1515605674),
 ('m180110_164044_initial', 1515605678),
 ('m180111_131328_tabelProduse', 1515676879),
-('m180111_132521_adminProduse', 1515678241);
+('m180111_132521_adminProduse', 1515678241),
+('m180731_181658_createTemplatesTable', 1533062026);
 
 -- --------------------------------------------------------
 
 --
--- Structura de tabel pentru tabelul `orders`
+-- Table structure for table `orders`
 --
 
 CREATE TABLE `orders` (
@@ -78,17 +79,18 @@ CREATE TABLE `orders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_romanian_ci;
 
 --
--- Salvarea datelor din tabel `orders`
+-- Dumping data for table `orders`
 --
 
 INSERT INTO `orders` (`id`, `clientID`, `workerID`, `status`, `dataPlasat`, `pretTotal`) VALUES
 (1, 2, 3, 4, '2018-01-12', 875),
-(2, 2, 3, 3, '2018-03-01', 0);
+(2, 2, 3, 3, '2018-03-01', 0),
+(3, 1, NULL, 1, '2018-07-31', 0);
 
 -- --------------------------------------------------------
 
 --
--- Structura de tabel pentru tabelul `produse`
+-- Table structure for table `produse`
 --
 
 CREATE TABLE `produse` (
@@ -98,7 +100,7 @@ CREATE TABLE `produse` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_romanian_ci;
 
 --
--- Salvarea datelor din tabel `produse`
+-- Dumping data for table `produse`
 --
 
 INSERT INTO `produse` (`id`, `comandaID`, `descriere`) VALUES
@@ -109,7 +111,7 @@ INSERT INTO `produse` (`id`, `comandaID`, `descriere`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structura de tabel pentru tabelul `statuses`
+-- Table structure for table `statuses`
 --
 
 CREATE TABLE `statuses` (
@@ -120,7 +122,7 @@ CREATE TABLE `statuses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_romanian_ci;
 
 --
--- Salvarea datelor din tabel `statuses`
+-- Dumping data for table `statuses`
 --
 
 INSERT INTO `statuses` (`id`, `denumire`, `userType`, `def`) VALUES
@@ -134,7 +136,19 @@ INSERT INTO `statuses` (`id`, `denumire`, `userType`, `def`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structura de tabel pentru tabelul `users`
+-- Table structure for table `templates`
+--
+
+CREATE TABLE `templates` (
+  `id` int(11) NOT NULL,
+  `clientID` int(11) NOT NULL,
+  `descriere` varchar(30) COLLATE utf8_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -157,7 +171,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_romanian_ci;
 
 --
--- Salvarea datelor din tabel `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `userType`, `username`, `email`, `password`, `authKey`, `numeComplet`, `numeFirma`, `adresaFacturare`, `oras`, `judet`, `CUI`, `nrRegCom`, `banca`, `contBancar`, `telefon`) VALUES
@@ -206,6 +220,13 @@ ALTER TABLE `statuses`
   ADD UNIQUE KEY `idx-statuses-clientID` (`denumire`);
 
 --
+-- Indexes for table `templates`
+--
+ALTER TABLE `templates`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx-templates-clientID` (`clientID`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -223,38 +244,49 @@ ALTER TABLE `users`
 --
 ALTER TABLE `adreselivrare`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `produse`
 --
 ALTER TABLE `produse`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
 --
 -- AUTO_INCREMENT for table `statuses`
 --
 ALTER TABLE `statuses`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `templates`
+--
+ALTER TABLE `templates`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
--- Restrictii pentru tabele sterse
+-- Constraints for dumped tables
 --
 
 --
--- Restrictii pentru tabele `adreselivrare`
+-- Constraints for table `adreselivrare`
 --
 ALTER TABLE `adreselivrare`
   ADD CONSTRAINT `fk-adreselivrare-userID` FOREIGN KEY (`clientID`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Restrictii pentru tabele `orders`
+-- Constraints for table `orders`
 --
 ALTER TABLE `orders`
   ADD CONSTRAINT `fk-orders-clientID` FOREIGN KEY (`clientID`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -262,10 +294,16 @@ ALTER TABLE `orders`
   ADD CONSTRAINT `fk-orders-workerID` FOREIGN KEY (`workerID`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Restrictii pentru tabele `produse`
+-- Constraints for table `produse`
 --
 ALTER TABLE `produse`
   ADD CONSTRAINT `fk-produse-comandaID` FOREIGN KEY (`comandaID`) REFERENCES `orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `templates`
+--
+ALTER TABLE `templates`
+  ADD CONSTRAINT `fk-templates-clientID` FOREIGN KEY (`clientID`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

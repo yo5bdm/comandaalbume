@@ -68,7 +68,7 @@ $this->registerCss("body{
                     <p>Accesul pe aplicatia <strong>Carpatic Studio</strong> se face doar de catre utilizatori inregistrati si aprobati. 
                         Te rugam sa intelegi ca aprobarea se face in 24-48 de ore, timp in care 
                         cel mai probabil vei fi sunat pentru confirmarea datelor.</p>
-                    <p>Datele din acest formular sunt necesare pentru procesul de comandare, facturare livrare.
+                    <p>Datele din acest formular sunt necesare pentru procesul de comandare, facturare, livrare.
                         Datele nu se folosesc in nici un alt fel. 
                         <strong>Carpatic Studio</strong> nu este operator de date cu caracter personal.
                     </p>

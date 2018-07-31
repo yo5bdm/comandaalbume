@@ -19,7 +19,7 @@ class m180111_131328_tabelProduse extends Migration
         $this->createTable('{{%produse}}', [
             'id'=>$this->primaryKey(),
             'comandaID'=>$this->integer()->notNull(),
-            'descriere'=>$this->string(30)
+            'descriere'=>$this->text()
         ]);
         $this->createIndex(
             'idx-produse-comandaID',

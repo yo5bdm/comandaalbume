@@ -317,6 +317,20 @@
                     </div>
                 </div>
             </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4 class="text-center">Incarca din template</h4>
+                    <!-- Lista de template-uri -->
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Salveaza comanda curenta ca template</h4>
+                    <!-- Buton de salvare comanda curenta ca template curent -->
+                    <input ng-model="template.nume" class="form-control" type="text" placeholder="{{template.autoname()}}"/>
+                    <button ng-click="template.salveaza()" class="form-control">Salveaza</button>
+                </div>
+            </div>
         </div>
     </div>
         <!-- MODAL START -->

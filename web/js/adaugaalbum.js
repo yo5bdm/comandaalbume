@@ -209,6 +209,38 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
                 materialcadru:'1'
             }            
         };
+
+        $scope.template = {
+            comanda:{},
+            nume:'',
+            autoname: function() {
+                return $scope.client.produs+' '+$scope.get('albume',$scope.client.albumSelectat).text+' '+$scope.client.nrMontaje+' colaje';
+            },
+            salveaza: function() {
+                this.comanda = JSON.parse(JSON.stringify($scope.client));
+                this.comanda.idComanda = -1;
+                //-----------------------------------------
+                var parameter = {
+                "_csrf":csrfT,
+                "descriere":JSON.stringify($scope.client)
+                };
+                var url = home + "templates/create";
+                $http.post(url, parameter).then(
+                    function(response) {
+                        if(response.data === 1) { //salvare reusita
+                            $window.location.href= home+"orders/view/"+idCd;
+                        } else { //eroare din PHP
+                            alert("Salvare nereusita! Te rog sa verifici datele si sa incerci din nou.");
+                        }
+                    },
+                    function(response) { //eroare de comunicare
+                         alert("Eroare de comunicare, va rugam incercati mai tarziu "+response);
+                    }
+                );
+                //-----------------------------------------
+                alert("Functia inca nu este implementata!");
+            }
+        };
         
         
         $scope.getFontCutie = function() {
