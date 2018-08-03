@@ -21,7 +21,7 @@ class m180731_181658_createTemplatesTable extends Migration
         $this->createTable('{{%'.$tabelTemplates.'}}', [
             'id' => $this->primaryKey(),
             'clientID' => $this->integer()->notNull(),
-            'descriere' =>$this->string(30),
+            'descriere' =>$this->text(),
         ]);
         $this->createIndex(
             'idx-'.$tabelTemplates.'-clientID',

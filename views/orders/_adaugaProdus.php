@@ -321,14 +321,26 @@
                 <div class="panel-body">
                     <h4 class="text-center">Incarca din template</h4>
                     <!-- Lista de template-uri -->
+                        <!-- -->
+                        <div class="dropdown" ng-repeat="x in templates">
+                          <button class="btn form-control btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {{x.titlu}}
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="#" ng-click="template.incarca(x.id)">Incarca</a></li>
+                            <li><a href="#" ng-click="template.sterge(x.id)">Sterge</a></li>
+                          </ul>
+                        </div>
+                        <!--  -->
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4>Salveaza comanda curenta ca template</h4>
                     <!-- Buton de salvare comanda curenta ca template curent -->
-                    <input ng-model="template.nume" class="form-control" type="text" placeholder="{{template.autoname()}}"/>
-                    <button ng-click="template.salveaza()" class="form-control">Salveaza</button>
+                    <input ng-model="template.nume" class="form-control" type="text" placeholder="Nume, ex: {{template.autoname()}}"/>
+                    <button ng-click="template.salveaza()" class="form-control">Salveaza template nou</button>
                 </div>
             </div>
         </div>
@@ -367,7 +379,8 @@
 var idCd = <?=$id?>;
 var csrfP = "<?=Yii::$app->request->csrfParam?>";
 var csrfT = "<?=Yii::$app->request->csrfToken?>";
-var home = "<?php echo Yii::$app->homeUrl; ?>";
+var home = "<?=Yii::$app->homeUrl?>";
+var userID = <?=Yii::$app->user->id?>;
 </script>
 <?php
     //$this->registerJsVar("idCd",$id);

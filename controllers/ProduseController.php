@@ -77,7 +77,6 @@ class ProduseController extends Controller
     public function actionProdus($id) {
         $produs = Produse::find()->where(['id'=>$id])->one();
         $this->layout = "json.php";
-        //$data['album'] = ;
         return $this->render('json',[
             'data' =>  $produs->descriere
         ]);

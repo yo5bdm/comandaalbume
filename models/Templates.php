@@ -10,6 +10,8 @@ use Yii;
  * @property int $id
  * @property int $clientID
  * @property string $descriere
+ * @property string $tipProdus
+ * @property string $titlu
  *
  * @property Users $client
  */
@@ -29,9 +31,10 @@ class Templates extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['clientID'], 'required'],
+            [['clientID', 'descriere'], 'required'],
             [['clientID'], 'integer'],
-            [['descriere'], 'string', 'max' => 30],
+            [['descriere'], 'string'],
+            [['tipProdus', 'titlu'], 'string', 'max' => 30],
             [['clientID'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['clientID' => 'id']],
         ];
     }
@@ -45,6 +48,8 @@ class Templates extends \yii\db\ActiveRecord
             'id' => 'ID',
             'clientID' => 'Client ID',
             'descriere' => 'Descriere',
+            'tipProdus' => 'Tip Produs',
+            'titlu' => 'Titlu',
         ];
     }
 

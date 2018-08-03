@@ -10,6 +10,30 @@
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4 class="text-center">Incarca din template</h4>
+                    <p ng-show="templates.length==0">Nu ai salvat nici un template in aceasta categorie</p>
+                    <div class="dropdown" ng-repeat="x in templates">
+                      <button class="btn form-control btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        {{x.titlu}}
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="#" ng-click="template.incarca(x.id)">Incarca</a></li>
+                        <li><a href="#" ng-click="template.sterge(x.id)">Sterge</a></li>
+                      </ul>
+                    </div>
+                    <!--  -->
+                    <h4>Salveaza comanda curenta ca template</h4>
+                    <!-- Buton de salvare comanda curenta ca template curent -->
+                    <input ng-model="template.nume" class="form-control" type="text" placeholder="Nume, ex: {{template.autoname()}}"/>
+                    <button ng-click="template.salveaza()" class="form-control">Salveaza template nou</button>
+                </div>
+            </div>
+
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="card-title text-center">Mape DVD/BluRay:</h4>
@@ -113,37 +137,47 @@
 <script>
 var app = angular.module("myApp", []);
 app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$http) {
-    var promise = $http.get('<?php echo Yii::$app->homeUrl; ?>produse/preturimape').then(function(response){
-        $scope.preturi = response.data.records;
-        console.log(response.data.records);
-    });
+    $scope.getPreturi = function() { $http.get('<?php echo Yii::$app->homeUrl; ?>produse/preturimape').then(function(response){
+            $scope.preturi = response.data.records;
+            console.log(response.data.records);
+        }); 
+    };
+    $scope.getTemplates = function() {
+        $http.get(home+'templates/user/mapedvd/'+userID).then(function(response){
+            $scope.templates = response.data;
+        });
+    };
     //metode
-    promise.then(function(data){
-        $scope.client={};
-        $scope.client.produs="mapadvd";
-        $scope.client.observatii='';
-        $scope.client.idComanda = <?=$id?>;
-        $scope.client.tip="Premium";
-        
-        $scope.client.premium={};
-        $scope.client.premium.nrdiscuri="1";
-        $scope.client.premium.magnet="1";
-        
-        $scope.client.clasic ={};
-        $scope.client.clasic.nrdiscuri="1";
-        $scope.client.clasic.laminare="1";
-        
-        $scope.client.ambele ={};
-        $scope.client.ambele.nrbucati=1;
-        $scope.client.ambele.coperta="1";
-        $scope.client.ambele.dimensiunipaspartu="1";
-        $scope.client.ambele.inscriptionare="1";
-        $scope.client.ambele.text="";
-        $scope.client.ambele.font='1';
-        $scope.client.ambele.pozitieText='1';
-        $scope.client.ambele.copertaburetata="1";
-        $scope.client.ambele.coltare="1";
-        $scope.client.pretTotal=0;
+    Promise.all([
+        $scope.getPreturi(),
+        $scope.getTemplates()
+    ]).then(function(data){
+        $scope.client={
+            produs:"mapadvd",
+            observatii:'',
+            idComanda : <?:$id?>,
+            tip:"Premium",
+            premium:{
+                nrdiscuri:"1",
+                magnet:"1"
+            },
+            clasic :{
+                nrdiscuri:"1",
+                laminare:"1"
+            },
+            ambele :{
+                nrbucati:1,
+                coperta:"1",
+                dimensiunipaspartu:"1",
+                inscriptionare:"1",
+                text:"",
+                font:'1',
+                pozitieText:'1',
+                copertaburetata:"1",
+                coltare:"1"
+            },            
+            pretTotal:0
+        };
         
         $scope.getPremium = function(vari,ide) {
             var ret = null;
@@ -224,6 +258,71 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
                 }
             );
         };
+
+        $scope.template = {
+            tipProdus:'mapedvd',
+            comanda:{},
+            nume:'',
+            incarca: function(ids) {
+                let selectat = JSON.parse($scope.templates.find(t=>t.id==ids).descriere);
+                for(var key in selectat) {
+                    if(typeof selectat[key] === "object") {//daca e obiect
+                        for(var kkey in selectat[key]) {
+                            $scope.client[key][kkey] = selectat[key][kkey];
+                        }
+                    } else if(Array.isArray(selectat[key])) { //daca e array
+                        $scope.client[key] = selectat[key].slice();
+                    } else { //daca nu e obiect sau array                        
+                        $scope.client[key] = selectat[key];
+                    }
+                }
+            },
+            autoname: function() {
+                return "Mapa DVD";
+            },
+            salveaza: function() {
+                //copiem comanda
+                this.comanda = JSON.parse(JSON.stringify($scope.client));
+                //stergem campurile care nu trebuie sa apara in template
+                delete this.comanda.idComanda;
+                delete this.comanda.observatii;
+                delete this.comanda.ambele.text;
+                delete this.pretTotal;
+                //verificam daca numele este setat corect
+                if(this.nume.length==0) {
+                    alert('Nu ai completat numele template-ului!');
+                    return;
+                }
+                //-----------------------------------------
+                var parameter = {
+                    //"_csrf":csrfT,
+                    "descriere":JSON.stringify(this.comanda),
+                    "clientID":userID,
+                    "titlu":this.nume,
+                    "tipProdus":this.tipProdus
+                };
+                var url = home + "templates/create";
+                $http.post(url, parameter).then(
+                    function(response) {
+                        if(response.data.titlu == parameter.titlu) { //salvare reusita
+                            //refresh lista
+                            $scope.getTemplates();
+                        } else { //eroare din PHP
+                            alert("Salvare nereusita! Te rog sa verifici datele/conexiunea si sa incerci din nou.");
+                        }
+                    },
+                    function(response) { //eroare de comunicare
+                         alert(response.data[0].message);
+                    }
+                );
+            },
+            sterge: function(ids) {
+                var url = home + "templates/delete/";
+                $http.delete(url+ids).then(function(response){
+                    $scope.getTemplates();
+                });
+            }
+        }; //end templates
         
     });
 }]);

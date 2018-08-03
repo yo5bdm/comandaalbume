@@ -1,14 +1,23 @@
 var app = angular.module("myApp", []);
 app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$http) {
-    var promise = $http.get(home+'produse/listapreturi').then(function(response){
-        console.log(response);
-        var json = response.data.records;
-        for(key in json) {
-            $scope[key] = json[key];
-        }
-    });
+    $scope.getProduse = function() {
+        $http.get(home+'produse/listapreturi').then(function(response){
+            var json = response.data.records;
+            for(key in json) {
+                $scope[key] = json[key];
+            }
+        });
+    }; 
+    $scope.getTemplates = function() {
+        $http.get(home+'templates/user/album/'+userID).then(function(response){
+            $scope.templates = response.data;
+        });
+    };
     //metode
-    promise.then(function(data){
+    Promise.all([
+        $scope.getProduse(),
+        $scope.getTemplates()
+    ]).then(function(data){
         //metode retrieve
         $scope.getCopFata = function(ide) {
             var ret = null;
@@ -211,34 +220,73 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
         };
 
         $scope.template = {
+            tipProdus:'album',
             comanda:{},
             nume:'',
+            incarca: function(ids) {
+                let selectat = JSON.parse($scope.templates.find(t=>t.id==ids).descriere);
+                $scope.client.replici = []; //daca in template nu exista replici, resetul nu se executa in ramura aferenta
+                for(var key in selectat) {
+                    if(typeof selectat[key] === "object") {//daca e obiect
+                        for(var kkey in selectat[key]) {
+                            $scope.client[key][kkey] = selectat[key][kkey];
+                        }
+                    } else if(Array.isArray(selectat[key])) { //daca e array
+                        $scope.client[key] = selectat[key].slice();
+                    } else { //daca nu e obiect sau array                        
+                        $scope.client[key] = selectat[key];
+                    }
+                }
+            },
             autoname: function() {
                 return $scope.client.produs+' '+$scope.get('albume',$scope.client.albumSelectat).text+' '+$scope.client.nrMontaje+' colaje';
             },
             salveaza: function() {
+                //copiem comanda
                 this.comanda = JSON.parse(JSON.stringify($scope.client));
-                this.comanda.idComanda = -1;
+                //stergem campurile care nu trebuie sa apara in template
+                delete this.comanda.idComanda;
+                delete this.comanda.cutieLux.text;
+                delete this.comanda.observatii;
+                delete this.comanda.linkFisiere;
+                delete this.comanda.textCopertaFata;
+                delete this.comanda.textCopertaSpate;
+                delete this.comanda.pretTotal;
+                //verificam daca numele este setat corect
+                if(this.nume.length==0) {
+                    alert('Nu ai completat numele template-ului!');
+                    return;
+                }
                 //-----------------------------------------
                 var parameter = {
-                "_csrf":csrfT,
-                "descriere":JSON.stringify($scope.client)
+                    //"_csrf":csrfT,
+                    "descriere":JSON.stringify(this.comanda),
+                    "clientID":userID,
+                    "titlu":this.nume,
+                    "tipProdus":this.tipProdus
                 };
                 var url = home + "templates/create";
                 $http.post(url, parameter).then(
                     function(response) {
-                        if(response.data === 1) { //salvare reusita
-                            $window.location.href= home+"orders/view/"+idCd;
+                        if(response.data.titlu == parameter.titlu) { //salvare reusita
+                            //refresh lista
+                            $scope.getTemplates();
                         } else { //eroare din PHP
-                            alert("Salvare nereusita! Te rog sa verifici datele si sa incerci din nou.");
+                            alert("Salvare nereusita! Te rog sa verifici datele/conexiunea si sa incerci din nou.");
                         }
                     },
                     function(response) { //eroare de comunicare
-                         alert("Eroare de comunicare, va rugam incercati mai tarziu "+response);
+                         alert(response.data[0].message);
                     }
                 );
                 //-----------------------------------------
-                alert("Functia inca nu este implementata!");
+                //console.log(this.comanda);
+            },
+            sterge: function(ids) {
+                var url = home + "templates/delete/";
+                $http.delete(url+ids).then(function(response){
+                    $scope.getTemplates();
+                });
             }
         };
         
@@ -290,6 +338,11 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
         
         $scope.salveazaComanda = function() {
             $scope.client.pretTotal = $scope.calculeaza();
+            if($scope.client.linkFisiere.length == 0) {
+                alert("Nu ai pus linkul pentru fisiere!");
+                return;
+            }
+
             var parameter = {
                 "_csrf":csrfT,
                 "descriere":JSON.stringify($scope.client)
