@@ -2,15 +2,15 @@
 /* @var $this yii\web\View */
 /* @var $model app\models\Orders */
 /* @var $form yii\widgets\ActiveForm */
+$this->title = "Adauga cutie stick";
+$this->params['breadcrumbs'][] = ['label' => 'Comenzi', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Comanda #'.$id, 'url' => ['orders/view/'.$id]];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div ng-app="myApp" ng-controller="myCtrl" class="container">
-    <div class="row text-center">
-        <h3 class="">&nbsp;</h3>
-    </div>
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4 class="text-center">Incarca din template</h4>

@@ -2,15 +2,15 @@
 /* @var $this yii\web\View */
 /* @var $model app\models\Orders */
 /* @var $form yii\widgets\ActiveForm */
+$this->title = "Adauga mape DVD";
+$this->params['breadcrumbs'][] = ['label' => 'Comenzi', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Comanda #'.$id, 'url' => ['orders/view/'.$id]];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div ng-app="myApp" ng-controller="myCtrl" class="container">
-    <div class="row text-center">
-        <h3 class="">&nbsp;</h3>
-    </div>
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4 class="text-center">Incarca din template</h4>
@@ -135,11 +135,14 @@
     </div>
 </div>
 <script>
+var csrfP = "<?=Yii::$app->request->csrfParam?>";
+var csrfT = "<?=Yii::$app->request->csrfToken?>";
+var home = "<?=Yii::$app->homeUrl?>";
+var userID = <?=Yii::$app->user->id?>;
 var app = angular.module("myApp", []);
 app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$http) {
     $scope.getPreturi = function() { $http.get('<?php echo Yii::$app->homeUrl; ?>produse/preturimape').then(function(response){
             $scope.preturi = response.data.records;
-            console.log(response.data.records);
         }); 
     };
     $scope.getTemplates = function() {
@@ -155,7 +158,7 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
         $scope.client={
             produs:"mapadvd",
             observatii:'',
-            idComanda : <?:$id?>,
+            idComanda : <?=$id?>,
             tip:"Premium",
             premium:{
                 nrdiscuri:"1",

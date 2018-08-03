@@ -18,30 +18,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
     <div class="col-lg-9">
         <h1><?= Html::encode($this->title) ?></h1>
-        <p>
-            <?php //if(Yii::$app->user->identity->userType == 2) echo Html::a('Actualizeaza', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']); ?>
-            <?php if(Yii::$app->user->identity->userType == 0) echo Html::a('Sterge', ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => 'Are you sure you want to delete this item?',
-                    'method' => 'post',
-                ],
-            ]) ?>
-            <?php 
-                foreach($status as $stat) {
-                    if(Yii::$app->user->identity->userType == $stat->userType || Yii::$app->user->identity->userType == 0){
-                        echo Html::a('Marcheaza ca '.$stat->denumire, ['modifica', 'id' => $model->id,'status'=>$stat->id], ['class' => 'btn btn-primary']);
-                        echo "&nbsp";
-                    }
-                }
-            ?>
-        </p>
         <?php if(Yii::$app->user->identity->userType != 2) { 
         echo DetailView::widget([
             'model' => $model,
             'attributes' => [
                 ['attribute' => 'clientID',
-                    'header' => 'Nume Client',
+                    'label' => 'Nume Client',
                     'value' => function( $data ) {
                         if($data->client === null) {
                             return '';
@@ -51,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 ['attribute' => 'workerID',
-                    'header' => 'Nume Lucrator',
+                    'label' => 'Nume Lucrator',
                     'value' => function( $data ) {
                         if($data->worker === null) {
                             return '';
@@ -61,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 ['attribute' => 'status',
-                    'header' => 'Starea comenzii',
+                    'label' => 'Starea comenzii',
                     'value' => function( $data ) {
                         if($data->status === null) {
                             return '';
@@ -71,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 ['attribute' => 'pretTotal',
-                    'header' => 'Pret total comanda'
+                    'label' => 'Pret total comanda'
                 ],
             ],
         ]); } else {
@@ -134,7 +116,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php //Pjax::end() ?>
     
     </div>
-    <div class="col-lg-3" ng-hide="isWorker()">
+    <div class="col-lg-3">
+        <div ng-hide="isWorker()">
         <h3 class="text-center">Adauga in comanda:</h3>
         <?php 
         //http://blog.neattutorials.com/yii2-pjax-tutorial/
@@ -144,18 +127,33 @@ $this->params['breadcrumbs'][] = $this->title;
         //echo Html::a('Adauga Print foto',['orders/adaugaprint','id'=>1],['class' => 'btn btn-primary btn-block']);
         echo Html::a('Adauga Cutie Stick',['orders/adaugacutiestick','id'=>1],['class' => 'btn btn-primary btn-block']);
         ?>
+        </div>
+        <h3>Actiuni</h3>
+        <?php 
+        foreach($status as $stat) {
+            if(Yii::$app->user->identity->userType == $stat->userType || Yii::$app->user->identity->userType == 0){
+                echo Html::a('Marcheaza ca '.$stat->denumire, ['modifica', 'id' => $model->id,'status'=>$stat->id], ['class' => 'btn btn-primary btn-block']);
+            }
+        }
+        if(Yii::$app->user->identity->userType == 0) echo Html::a('Sterge Comanda', ['delete', 'id' => $model->id], [
+            'class' => 'btn btn-danger btn-block',
+            'data' => [
+                'confirm' => 'Esti sigur ca vrei sa stergi comanda?',
+                'method' => 'post',
+            ],
+        ]) ?>
     </div>
     
 </div>
 <script type="text/javascript">
-  var app = angular.module("myApp", []);
-app.controller("myCtrl", ['$scope', function($scope) {
-    $scope.userType = <?=Yii::$app->user->identity->userType?>;
-    $scope.isWorker = function() {
-      console.log($scope.userType);
-      if($scope.userType==1) return true;
-    };
-}]);
+    var app = angular.module("myApp", []);
+    app.controller("myCtrl", ['$scope', function($scope) {
+        $scope.userType = <?=Yii::$app->user->identity->userType?>;
+        $scope.isWorker = function() {
+            console.log($scope.userType);
+            if($scope.userType==1) return true;
+        };
+    }]);
 </script>
 <?php 
 //https://bootsnipp.com/snippets/featured/clean-modal-login-form
