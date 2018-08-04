@@ -76,7 +76,7 @@
         {"id": "2","text":"2 bucati","pret":"0"}, 
         {"id": "3","text":"3 bucati","pret":"0"} 
     ],
-    "coduriCoperta":[ 
+    "coduriCoperta":[
         {"id": 1,"text":"Negru","cod":"1001"}, 
         {"id": 2,"text":"Verde","cod":"1002"}, 
         {"id": 3,"text":"Galben","cod":"1003"}, 
