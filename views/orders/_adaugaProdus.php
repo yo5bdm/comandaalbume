@@ -2,10 +2,14 @@
 /* @var $this yii\web\View */
 /* @var $model app\models\Orders */
 /* @var $form yii\widgets\ActiveForm */
+use yii\web\View;
 $this->title = "Adauga album";
 $this->params['breadcrumbs'][] = ['label' => 'Comenzi', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Comanda #'.$id, 'url' => ['orders/view/'.$id]];
 $this->params['breadcrumbs'][] = $this->title;
+$this->registerJs('
+    var homeUrl = "'.Yii::$app->homeUrl.'";
+    ',View::POS_HEAD);
 ?>
 <div ng-app="myApp" ng-controller="myCtrl" class="container">
     <div class="row">
@@ -42,21 +46,45 @@ $this->params['breadcrumbs'][] = $this->title;
                         <option ng-repeat="x in bucCoperta" value="{{x.id}}">{{x.text}} +{{x.pret}} lei</option>
                     </select>
                 </p>
-                <p>Cod coperta <span ng-show="client.bucCopertaSel!=1">fata</span>: 
+                <div><p>Cod coperta <span ng-show="client.bucCopertaSel!=1">fata</span>: </p>
                     <select class="form-control" ng-model="client.codCopFata">
-                        <option ng-repeat="x in coduriCoperta" value="{{x.id}}">{{x.text}}</option>
+                        <option ng-repeat="x in coduriCoperta" value="{{x.cod}}">{{x.cod}} - {{x.material}} {{x.culoare}}</option>
                     </select>
-                </p>
-                <p ng-show="client.bucCopertaSel!=1">Cod coperta spate: 
+                    <div class="row">
+                        <div class="col-md-2">&nbsp;</div>
+                        <div class="col-md-8">
+                            <p style="margin-top: 10px; margin-bottom: 10px;">
+                                <img class="img-responsive" cond-src lnk="client.codCopFata"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="client.bucCopertaSel!=1"><p>Cod coperta spate: </p>
                     <select class="form-control" ng-model="client.codCopSpate">
-                        <option ng-repeat="x in coduriCoperta" value="{{x.id}}">{{x.text}}</option>
+                        <option ng-repeat="x in coduriCoperta" value="{{x.cod}}">{{x.cod}} - {{x.material}} {{x.culoare}}</option>
                     </select>
-                </p>
-                <p ng-show="client.bucCopertaSel!=1 && client.bucCopertaSel!=2">Cod cotor: 
+                    <div class="row">
+                        <div class="col-md-2">&nbsp;</div>
+                        <div class="col-md-8">
+                            <p style="margin-top: 10px; margin-bottom: 10px;">
+                                <img class="img-responsive" cond-src lnk="client.codCopSpate"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="client.bucCopertaSel!=1 && client.bucCopertaSel!=2"><p>Cod cotor: </p>
                     <select class="form-control" ng-model="client.codCopCotor">
-                        <option ng-repeat="x in coduriCoperta" value="{{x.id}}">{{x.text}}</option>
+                        <option ng-repeat="x in coduriCoperta" value="{{x.cod}}">{{x.cod}} - {{x.material}} {{x.culoare}}</option>
                     </select>
-                </p>
+                    <div class="row">
+                        <div class="col-md-2">&nbsp;</div>
+                        <div class="col-md-8">
+                            <p style="margin-top: 10px; margin-bottom: 10px;">
+                                <img class="img-responsive" cond-src lnk="client.codCopCotor"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
                 <p>Coperta fata: 
                     <select class="form-control" ng-model="client.copertaFataSel">
                         <optgroup ng-repeat="x in copertaFata" label="{{x.label}}">

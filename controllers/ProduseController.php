@@ -142,6 +142,10 @@ class ProduseController extends Controller
         return $this->redirect(Yii::$app->request->referrer);
     }
     
+    public function actionCoduricoperti() {
+        $this->layout = "json.php";
+        return $this->render('coduriCoperti');
+    }
     public function actionListapreturi() {
         $this->layout = "json.php";
         return $this->render('listapreturi');

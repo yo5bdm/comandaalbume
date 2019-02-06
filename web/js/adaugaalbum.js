@@ -1,4 +1,26 @@
 var app = angular.module("myApp", []);
+app.directive('condSrc',function($http){
+    return {
+        restrict: 'A',
+        scope: {
+            lnk: '='
+        },
+        link: function(scope, elem, attrs) {
+            scope.$watch('lnk', function() {
+                if(typeof scope.lnk === 'undefined') {
+                    elem.attr('src',homeUrl+'include/materiale/wide/1.jpg');
+                    return;
+                }
+                var linkFinal = homeUrl+'include/materiale/wide/'+scope.lnk+'.jpg';
+                $http.get(linkFinal).then(function(){
+                    elem.attr('src',linkFinal);
+                },function(){
+                    elem.attr('src',homeUrl+'include/materiale/wide/1.jpg');
+                });
+            });
+        },
+    };
+});
 app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$http) {
     $scope.getProduse = function() {
         $http.get(home+'produse/listapreturi').then(function(response){
@@ -13,15 +35,22 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
             $scope.templates = response.data;
         });
     };
+    $scope.getCoduriCoperti = function() {
+        $http.get(home+'produse/coduricoperti').then(function(response){
+            $scope.coduriCoperta = response.data;
+        });
+    }
     //metode
     Promise.all([
         $scope.getProduse(),
-        $scope.getTemplates()
+        $scope.getTemplates(),
+        $scope.getCoduriCoperti()
     ]).then(function(data){
         //metode retrieve
         $scope.getCopFata = function(ide) {
             var ret = null;
             var cop = $scope.copertaFata;
+            if(typeof cop === 'undefined') return [];
             for(var i=0;i<cop.length;i++) {
                 for(var j=0;j<cop[i].values.length;j++){
                     if(Number(cop[i].values[j].id) === Number(ide)) { 

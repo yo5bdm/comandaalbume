@@ -76,12 +76,6 @@
         {"id": "2","text":"2 bucati","pret":"0"}, 
         {"id": "3","text":"3 bucati","pret":"0"} 
     ],
-    "coduriCoperta":[
-        {"id": 1,"text":"Negru","cod":"1001"}, 
-        {"id": 2,"text":"Verde","cod":"1002"}, 
-        {"id": 3,"text":"Galben","cod":"1003"}, 
-        {"id": 4,"text":"Rosu","cod":"1004"} 
-    ],
     "coltare":[ 
         {"id":1,"text":"Nu","pret":0}, 
         {"id":2,"text":"Aurii","pret":0}, 

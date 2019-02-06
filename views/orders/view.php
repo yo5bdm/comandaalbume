@@ -1,11 +1,9 @@
 <?php
 
 use app\models\Orders;
-use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\DetailView;
-use yii\widgets\Pjax;
 use yii\grid\GridView;
 
 /* @var $this View */
@@ -75,7 +73,31 @@ $this->params['breadcrumbs'][] = $this->title;
             ]);
         } ?>
     <h3>Lista de produse din comanda curenta</h3>
-    <?php //Pjax::begin() ?>
+    <?php //Pjax::begin()
+    if($model->status != 1) { //in plasare e voie sa se modifice
+        $butoane = [
+            'leadView'   => function ($url, $model) { //view
+                return Html::a('<span class="glyphicon glyphicon-search"></span>', ['produse/view', 'id' => $model->id], ['title' => 'view']);
+            }
+        ];
+    } else {
+        $butoane = [
+            'leadView'   => function ($url, $model) { //view
+                return Html::a('<span class="glyphicon glyphicon-search"></span>', ['produse/view', 'id' => $model->id], ['title' => 'view']);
+            },
+            'leadUpdate' => function ($url, $model) { //edit
+                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['produse/update', 'id' => $model->id], ['title' => 'update']);
+            },
+            'leadDelete' => function ($url, $model) { //delete
+                return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['produse/delete', 'id' => $model->id], [
+                    'title'        => 'delete',
+                    'data-confirm' => Yii::t('yii', 'Sigur vrei sa stergi?'),
+                    'data-method'  => 'post',
+                ]);
+            }
+        ];
+    }
+    ?>
     <?= GridView::widget([
         'dataProvider' => $produse,
         'columns' => [
@@ -95,21 +117,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn',
                 'header' => 'Actiuni',
                 'template'=>'{leadView} {leadUpdate} {leadDelete}',
-                'buttons' => [
-                    'leadView'   => function ($url, $model) { //view
-                        return Html::a('<span class="glyphicon glyphicon-search"></span>', ['produse/view', 'id' => $model->id], ['title' => 'view']);
-                    },
-                    'leadUpdate' => function ($url, $model) { //edit
-                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['produse/update', 'id' => $model->id], ['title' => 'update']);
-                    },
-                    'leadDelete' => function ($url, $model) { //delete
-                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['produse/delete', 'id' => $model->id], [
-                            'title'        => 'delete',
-                            'data-confirm' => Yii::t('yii', 'Sigur vrei sa stergi?'),
-                            'data-method'  => 'post',
-                        ]);
-                    },
-                ]
+                'buttons' => $butoane
             ],
         ],
     ]) ?>
@@ -122,19 +130,36 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php 
         //http://blog.neattutorials.com/yii2-pjax-tutorial/
         echo Html::a('Adauga Album',['orders/adaugaalbum','id'=>1],['class' => 'btn btn-primary btn-block']);
-        //echo Html::a('Adauga Cutie Album Lux',['orders/adaugacutie','id'=>1],['class' => 'btn btn-primary btn-block']);
+        echo Html::a('Adauga Cutie Album Lux',['orders/adaugacutie','id'=>1],['class' => 'btn btn-primary btn-block']);
         echo Html::a('Adauga Mape DVD',['orders/adaugamapadvd','id'=>1],['class' => 'btn btn-primary btn-block']);
-        //echo Html::a('Adauga Print foto',['orders/adaugaprint','id'=>1],['class' => 'btn btn-primary btn-block']);
+        echo Html::a('Adauga Print foto',['orders/adaugaprint','id'=>1],['class' => 'btn btn-primary btn-block']);
         echo Html::a('Adauga Cutie Stick',['orders/adaugacutiestick','id'=>1],['class' => 'btn btn-primary btn-block']);
         ?>
         </div>
         <h3>Actiuni</h3>
-        <?php 
-        foreach($status as $stat) {
-            if(Yii::$app->user->identity->userType == $stat->userType || Yii::$app->user->identity->userType == 0){
-                echo Html::a('Marcheaza ca '.$stat->denumire, ['modifica', 'id' => $model->id,'status'=>$stat->id], ['class' => 'btn btn-primary btn-block']);
+        <?php
+        if(Yii::$app->user->identity->userType == 2) {
+            if($model->status == 2){
+                echo Html::a('Activeaza editarea comenzii',
+                    ['modifica', 'id' => $model->id,'status'=>1],
+                    ['class' => 'btn btn-danger btn-block']);
+            }
+            if($model->status != 2) echo Html::a('Confirma comanda',
+                ['modifica', 'id' => $model->id,'status'=>2],
+                ['class' => 'btn btn-danger btn-block']);
+            echo Html::a('Anuleaza comanda',
+                ['modifica', 'id' => $model->id,'status'=>6],
+                ['class' => 'btn btn-danger btn-block']);
+        }
+
+        if(Yii::$app->user->identity->userType != 2) {
+            foreach($status as $stat) {
+                if(Yii::$app->user->identity->userType == $stat->userType || Yii::$app->user->identity->userType == 0){
+                    echo Html::a('Marcheaza ca '.$stat->denumire, ['modifica', 'id' => $model->id,'status'=>$stat->id], ['class' => 'btn btn-primary btn-block']);
+                }
             }
         }
+
         if(Yii::$app->user->identity->userType == 0) echo Html::a('Sterge Comanda', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger btn-block',
             'data' => [
@@ -142,19 +167,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <h3>Atentie!</h3>
+        <p>Comanda poate fi <strong>editata</strong> atat timp cat este <i>[in plasare]</i>.</p>
+        <p>Odata <strong>confirmata</strong>, editarea se poate face doar prin modificarea statusului, atat timp cat nu este preluata.</p>
+        <p>Dupa <strong>preluare</strong>, modificarea comenzii nu mai este posibila!</p>
     </div>
     
 </div>
-<script type="text/javascript">
-    var app = angular.module("myApp", []);
-    app.controller("myCtrl", ['$scope', function($scope) {
-        $scope.userType = <?=Yii::$app->user->identity->userType?>;
-        $scope.isWorker = function() {
-            console.log($scope.userType);
-            if($scope.userType==1) return true;
-        };
-    }]);
-</script>
+    <script type="text/javascript">
+        var app = angular.module("myApp", []);
+        app.controller("myCtrl", ['$scope', function($scope) {
+            $scope.userType = <?=Yii::$app->user->identity->userType?>;
+            $scope.isWorker = function() {
+                console.log($scope.userType);
+                if($scope.userType==1) return true;
+            };
+        }]);
+    </script>
 <?php 
 //https://bootsnipp.com/snippets/featured/clean-modal-login-form
 $this->registerCss(".loginmodal-container {
