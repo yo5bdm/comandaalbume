@@ -64,6 +64,7 @@ class ProduseController extends Controller
             case 'cutieStick':
                 $view = '_cutieStick';
                 break;
+                //TODO de bagat aici si restul elementelor de comanda
             default:
                 $view = 'view';
         }
@@ -97,15 +98,10 @@ class ProduseController extends Controller
         if($model->save()) {
             $refresh = new \app\models\Orders();
             $refresh->refreshOrder($json->idComanda);
-            //return $this->redirect(['view', 'id' => $model->id]);
             return 1;
         } else {
             return 0;
         }
-
-//        return $this->render('create', [
-//            'model' => $model,
-//        ]);
     }
 
     /**
@@ -117,15 +113,42 @@ class ProduseController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $prod = Produse::find()->where(['id'=>$id])->one();
+        $produs = json_decode($prod->descriere);
+        switch($produs->produs){
+            case 'album':
+                $view = '_editalbum';
+                break;
+            case 'mapadvd':
+                $view = '_mapaDvd';
+                break;
+            case 'cutieStick':
+                $view = '_cutieStick';
+                break;
+            //TODO de bagat aici si restul elementelor de comanda
+            default:
+                $view = 'view';
         }
 
-        return $this->render('update', [
-            'model' => $model,
+        return $this->render($view, [
+            'id'=>$id,
+            'idCd' => $produs->idComanda,
+            'model' => $this->findModel($id),
         ]);
+    }
+
+    public function actionSalveaza($id) {
+        $model = $this->findModel($id);
+        $post = Yii::$app->request->post();
+        $json = json_decode($post['descriere']);
+        $model->descriere = $post['descriere'];
+        if ($model->save()) {
+            $refresh = new \app\models\Orders();
+            $refresh->refreshOrder($json->idComanda);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     /**

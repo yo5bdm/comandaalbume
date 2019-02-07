@@ -9,7 +9,7 @@ use yii\grid\GridView;
 /* @var $this View */
 /* @var $model Orders */
 
-$this->title = "Comanda #".$model->id.' / '.Yii::$app->formatter->asDate($model->dataPlasat);
+$this->title = "Comanda #".$model->id.' din '.Yii::$app->formatter->asDate($model->dataPlasat);
 $this->params['breadcrumbs'][] = ['label' => 'Comenzi', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -125,31 +125,41 @@ $this->params['breadcrumbs'][] = $this->title;
     
     </div>
     <div class="col-lg-3">
-        <div ng-hide="isWorker()">
-        <h3 class="text-center">Adauga in comanda:</h3>
-        <?php 
-        //http://blog.neattutorials.com/yii2-pjax-tutorial/
-        echo Html::a('Adauga Album',['orders/adaugaalbum','id'=>1],['class' => 'btn btn-primary btn-block']);
-        echo Html::a('Adauga Cutie Album Lux',['orders/adaugacutie','id'=>1],['class' => 'btn btn-primary btn-block']);
-        echo Html::a('Adauga Mape DVD',['orders/adaugamapadvd','id'=>1],['class' => 'btn btn-primary btn-block']);
-        echo Html::a('Adauga Print foto',['orders/adaugaprint','id'=>1],['class' => 'btn btn-primary btn-block']);
-        echo Html::a('Adauga Cutie Stick',['orders/adaugacutiestick','id'=>1],['class' => 'btn btn-primary btn-block']);
+        <?php //adminul poate adauga oricand produse, clientul doar pana se preia comanda
+        if((Yii::$app->user->identity->userType == 2 && $model->status == 1)||Yii::$app->user->identity->userType == 0) {
+            echo '<h3 class="text-center">Adauga in comanda:</h3>';
+            echo Html::a('Adauga Album',['orders/adaugaalbum','id'=>1],['class' => 'btn btn-primary btn-block']);
+            echo Html::a('Adauga Cutie Album Lux',['orders/adaugacutie','id'=>1],['class' => 'btn btn-primary btn-block']);
+            echo Html::a('Adauga Mape DVD',['orders/adaugamapadvd','id'=>1],['class' => 'btn btn-primary btn-block']);
+            echo Html::a('Adauga Print foto',['orders/adaugaprint','id'=>1],['class' => 'btn btn-primary btn-block']);
+            echo Html::a('Adauga Cutie Stick',['orders/adaugacutiestick','id'=>1],['class' => 'btn btn-primary btn-block']);
+        }
         ?>
-        </div>
         <h3>Actiuni</h3>
         <?php
         if(Yii::$app->user->identity->userType == 2) {
+            $afn = false;
             if($model->status == 2){
+                $afn = true;
                 echo Html::a('Activeaza editarea comenzii',
                     ['modifica', 'id' => $model->id,'status'=>1],
                     ['class' => 'btn btn-danger btn-block']);
+                echo Html::a('Anuleaza comanda',
+                    ['modifica', 'id' => $model->id,'status'=>6],
+                    ['class' => 'btn btn-danger btn-block']);
             }
-            if($model->status != 2) echo Html::a('Confirma comanda',
-                ['modifica', 'id' => $model->id,'status'=>2],
-                ['class' => 'btn btn-danger btn-block']);
-            echo Html::a('Anuleaza comanda',
-                ['modifica', 'id' => $model->id,'status'=>6],
-                ['class' => 'btn btn-danger btn-block']);
+            if($model->status == 1) {
+                $afn = true;
+                echo Html::a('Confirma comanda',
+                    ['modifica', 'id' => $model->id,'status'=>2],
+                    ['class' => 'btn btn-danger btn-block']);
+                echo Html::a('Anuleaza comanda',
+                    ['modifica', 'id' => $model->id,'status'=>6],
+                    ['class' => 'btn btn-danger btn-block']);
+            }
+            if(!$afn) {
+                echo '<p>Comenzile preluate nu se mai pot modifica! Pentru detalii, va rugam sa ne contactati telefonic.</p>';
+            }
         }
 
         if(Yii::$app->user->identity->userType != 2) {
@@ -175,7 +185,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
 </div>
     <script type="text/javascript">
-        var app = angular.module("myApp", []);
+        let app = angular.module("myApp", []);
         app.controller("myCtrl", ['$scope', function($scope) {
             $scope.userType = <?=Yii::$app->user->identity->userType?>;
             $scope.isWorker = function() {

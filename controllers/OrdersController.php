@@ -97,23 +97,20 @@ class OrdersController extends Controller
     public function actionCreate()
     {
         $model = new Orders();
-        $status = new \app\models\Statuses();
+        $status = new Statuses();
 
-        if (Yii::$app->request->isPost) {
-            $model->clientID = Yii::$app->user->identity->id;
-            $model->workerID = NULL;
-            $model->dataPlasat = date('Y-m-d');
-            $model->status = $status->getDefault();
-            $model->pretTotal = 0.0;
-            if($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                Yii::$app->session->setFlash('error', 'Eroare de sistem, nu s-a putut salva comanda. Te rugam sa incerci mai tarziu');
-            }
+        $model->clientID = Yii::$app->user->identity->id;
+        $model->workerID = NULL;
+        $model->dataPlasat = date('Y-m-d');
+        $model->status = $status->getDefault();
+        $model->pretTotal = 0.0;
+        if($model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            Yii::$app->session->setFlash('error', 'Eroare de sistem, nu s-a putut salva comanda. Te rugam sa incerci mai tarziu');
         }
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+
+        return $this->render('create');
     }
 
     /**
@@ -144,6 +141,8 @@ class OrdersController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -164,15 +163,6 @@ class OrdersController extends Controller
             Yii::$app->session->setFlash('error', 'Eroare la salvarea modificarilor');
         }
         return $this->redirect(['view','id'=>$id]);
-    }
-    
-    public function actionPjax($id) {
-        $elComanda = new \app\models\Elementecomanda();
-        $prods = new \app\models\Produse();
-        return $this->renderPartial('_adaugaProdus',[
-            'response' => $elComanda->findAll(['produsID'=>$id]),
-            'model' => $prods,
-        ],true);
     }
 
     public function actionAdaugaalbum($id) {

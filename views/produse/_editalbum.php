@@ -3,7 +3,7 @@
 /* @var $model app\models\Orders */
 /* @var $form yii\widgets\ActiveForm */
 use yii\web\View;
-$this->title = "Adauga album";
+$this->title = "Actualizeaza album";
 $this->params['breadcrumbs'][] = ['label' => 'Comenzi', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => 'Comanda #'.$id, 'url' => ['orders/view/'.$id]];
 $this->params['breadcrumbs'][] = $this->title;
@@ -337,7 +337,7 @@ $this->registerJs('
                 <div class="panel-body">
                     <h4 class="text-center">Total album</h4>
                     <h3>{{calculeaza()}} lei </h3>
-                    <button ng-click="salveazaComanda()" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Salveaza produsul</button>
+                    <button ng-click="salveazaComanda()" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span>Actualizeaza produsul</button>
                     <div ng-show="laminareVizibil()">
                         <hr>
                         <h4 class="text-center">Dimensiunile pentru copertile laminate:</h4>
@@ -405,7 +405,8 @@ $this->registerJs('
         <!--  MODAL END  -->
 </div>
 <script>
-var idCd = <?=$id?>;
+var idProdus = <?=$id?>;
+var idComanda = <?=$idCd?>;
 var csrfP = "<?=Yii::$app->request->csrfParam?>";
 var csrfT = "<?=Yii::$app->request->csrfToken?>";
 var home = "<?=Yii::$app->homeUrl?>";
@@ -415,6 +416,6 @@ var userID = <?=Yii::$app->user->id?>;
     //$this->registerJsVar("idCd",$id);
     //$this->registerJsVar("csrfP",Yii::$app->request->csrfParam);
     //$this->registerJsVar("csrfT",Yii::$app->request->csrfToken);
-    $this->registerJsFile("@web/js/adaugaalbum.js");
+    $this->registerJsFile("@web/js/editalbum.js");
 ?>
 </div>
