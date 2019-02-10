@@ -95,6 +95,10 @@ class ProduseController extends Controller
         $json = json_decode($post['descriere']);
         $model->comandaID = $json->idComanda;
         $model->descriere = $post['descriere'];
+        $comanda = $model->getComanda()->one();
+        if($comanda->status !== 1) {
+            return 'Comanda nu este deschisa pentru editare! \nComanda #' .$model->comandaID = $json->idComanda;
+        }
         if($model->save()) {
             $refresh = new \app\models\Orders();
             $refresh->refreshOrder($json->idComanda);
@@ -157,6 +161,8 @@ class ProduseController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {

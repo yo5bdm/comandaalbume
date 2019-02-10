@@ -29,7 +29,7 @@ class SiteController extends Controller
                     ],
                     [ //?
                         'allow' => true,
-                        'actions' => ['login', 'inregistrare', 'index', 'contact'],
+                        'actions' => ['login', 'inregistrare', 'index', 'contact','ajutor'],
                         'roles' => ['?'],
                     ],
                 ],
@@ -70,6 +70,16 @@ class SiteController extends Controller
             return $this->redirect(['orders/index']);
         }
         return $this->render('index');
+    }
+
+    /**
+     * Displays homepage.
+     *
+     * @return string
+     */
+    public function actionAjutor()
+    {
+        return $this->render('ajutor');
     }
 
     /**

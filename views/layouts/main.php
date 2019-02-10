@@ -42,6 +42,7 @@ AppAsset::register($this);
         $menuItems=[
             ['label' => 'Acasa', 'url' => ['/site/index']],
             ['label' => 'Despre', 'url' => ['/site/about']],
+            ['label' => 'Ajutor', 'url' => ['/site/ajutor']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             ['label' => 'Inregistrare', 'url' => ['/site/inregistrare']],
             ['label' => 'Login', 'url' => ['/site/login']],
@@ -50,6 +51,7 @@ AppAsset::register($this);
         $menuItems=[
             ['label' => 'Comenzi', 'url' => ['/orders/index']],
             ['label' => 'Contul meu', 'url' => ['/users/update/'.Yii::$app->user->identity->id]],
+            ['label' => 'Ajutor', 'url' => ['/site/ajutor']],
             '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(

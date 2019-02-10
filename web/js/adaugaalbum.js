@@ -380,10 +380,10 @@ app.controller("myCtrl", ['$scope', '$window','$http', function($scope,$window,$
             var url = home + "produse/create";
             $http.post(url, parameter).then(
                 function(response) {
-                    if(response.data === 1) { //salvare reusita
+                    if(response.data == 1) { //salvare reusita
                         $window.location.href= home+"orders/view/"+idCd;
                     } else { //eroare din PHP
-                        alert("Salvare nereusita! Te rog sa verifici datele si sa incerci din nou.");
+                        alert("Salvare nereusita! \nEroare: "+response.data);
                     }
                 },
                 function(response) { //eroare de comunicare

@@ -15,6 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row" ng-app="myApp" ng-controller="myCtrl">
     <div class="col-lg-9">
+        <?php if($model->status == 1):?>
+        <div class="alert alert-danger" role="alert"><strong>Atenție!</strong> Comanda nu este confirmată și nu va putea fi preluată! Pentru finalizare, fă click pe butonul <string>Confirmă comanda</string>.</div>
+        <?php endif ?>
         <h1><?= Html::encode($this->title) ?></h1>
         <?php if(Yii::$app->user->identity->userType != 2) { 
         echo DetailView::widget([
@@ -108,8 +111,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' =>function($data) {
                     $json = json_decode($data->descriere);
-                    $ret ="<h4>Produsul comandat: <strong>".ucfirst($json->produs)."</strong></h4>";
-                    $ret .= "<p>Pret: <strong>".$json->pretTotal." Lei</strong></p>";
+                    $ret = '<h4>Produsul comandat: <strong>' .ucfirst($json->produs). '</strong></h4>';
+                    $ret .= '<p>Pret: <strong>' .$json->pretTotal. ' Lei</strong></p>';
                     $ret .= "<p>Obs: <strong>'".$json->observatii."'</strong></p>";
                     return $ret;
                 }
@@ -162,12 +165,14 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         }
 
-        if(Yii::$app->user->identity->userType != 2) {
+        if(Yii::$app->user->identity->userType != 2 && $model->status != 1) {
             foreach($status as $stat) {
                 if(Yii::$app->user->identity->userType == $stat->userType || Yii::$app->user->identity->userType == 0){
                     echo Html::a('Marcheaza ca '.$stat->denumire, ['modifica', 'id' => $model->id,'status'=>$stat->id], ['class' => 'btn btn-primary btn-block']);
                 }
             }
+        } else {
+            echo '<p>Comanda nu se poate prelua pana nu e finalizata de utilizator!</p>';
         }
 
         if(Yii::$app->user->identity->userType == 0) echo Html::a('Sterge Comanda', ['delete', 'id' => $model->id], [
